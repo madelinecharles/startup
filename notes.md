@@ -1,6 +1,6 @@
 # CS 260 Notes
 
-[My startup - Simon](https://simon.cs260.click)
+[My startup - Drinkly](https://simon.cs260.click)
 
 ## Helpful links
 
@@ -8,7 +8,20 @@
 - [Canvas](https://byu.instructure.com)
 - [MDN](https://developer.mozilla.org)
 
-## AWS
+## Startup Specification
+
+It was interesting to see how a web app works together and to look at all the different services required. It's cool how Node.js lets javascript run on a server instead of the backend, and how Route 53 (AWS DNS) translates the domain name (e.g. myapp.com) into the IP address of the server. 
+
+I hadn't used Git in the terminal very much, and I enjoyed leearning that it was available. I now understand a clearer difference between Git and GitHub:
+- Git is the tool on your computer that tracks versions of your project
+- GitHub is a website that stores a copy of your Git project online so you can back it up, share it, and collaborate
+
+
+
+
+
+
+<!-- ## AWS
 
 My IP address is: 54.81.96.130
 Launching my AMI I initially put it on a private subnet. Even though it had a public IP address and the security group was right, I wasn't able to connect to it.
@@ -96,4 +109,4 @@ Handling the toggling of the checkboxes was particularly interesting.
     </div>
   ))}
 </div>
-```
+``` -->
