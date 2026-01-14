@@ -1,4 +1,4 @@
-# Your startup name here
+# Drinkly
 
 [My Notes](notes.md)
 
