@@ -8,17 +8,67 @@
 - [Canvas](https://byu.instructure.com)
 - [MDN](https://developer.mozilla.org)
 
-## Startup Specification
+## Deliverable 1 Notes
 
 It was interesting to see how a web app works together and to look at all the different services required. It's cool how Node.js lets javascript run on a server instead of the backend, and how Route 53 (AWS DNS) translates the domain name (e.g. myapp.com) into the IP address of the server. 
 
 I hadn't used Git in the terminal very much, and I enjoyed leearning that it was available. I now understand a clearer difference between Git and GitHub:
 - Git is the tool on your computer that tracks versions of your project
-- GitHub is a website that stores a copy of your Git project online so you can back it up, share it, and collaborate
+- GitHub is a website that stores a copy of your Git project online so you can back it up, share it, and collaborate.
 
+## Startup Specification Deliverable
 
+### Elevator pitch
 
+Drinkly is a gamified water intake tracker that turns hydration into a daily streak game. Users log water with a single tap and watch their virtual tree grow with rain animations as they progress toward personalized hydration goals, earn fruit rewards for consistency, unlock new tree species, and compete with friends on a realtime leaderboard.
 
+### Design
+
+![Mock](docs/dashboard-mock.png)
+
+Here is a sequence diagram that shows how users interact with the backend when logging water and updating the leaderboard.
+
+```mermaid
+sequenceDiagram
+    actor User
+    actor Friend
+    User->>Server: Log water intake
+    Server->>Database: Store water log
+    Server-->>User: Updated progress & rewards
+    Server-->>Friend: Leaderboard update (WebSocket)
+  ```
+
+### Key features
+
+- Secure user registration, login, and logout
+- Personalized daily hydration goals
+- One-tap water intake logging
+- Animated tree growth and rain effects
+- Streak tracking and fruit rewards
+- Unlockable tree types based on consistency
+- Friends system and weekly leaderboard
+- Realtime updates using WebSockets
+- Persistent storage of user and activity data
+- Ability for admin to manage hydration facts
+
+### Technologies
+
+I am going to use the required technologies in the following ways:
+
+- **HTML** – Uses correct HTML structure for application pages including login, profile setup, dashboard, fruit basket, leaderboard, settings, and admin views.
+- **CSS** – Application styling that looks good on different screen sizes, uses good whitespace, color choice, contrast, and includes animations for tree growth and rain effects.
+- **React** – Provides login, water logging, progress display, leaderboard viewing, and routing using React components and React Router.
+- **Service** – Backend service with endpoints for:
+- register
+- login
+- logout
+- logging water intake
+- retrieving daily intake totals
+- retrieving leaderboard data
+- managing fruit rewards and tree unlocks
+- **DB/Login** – Stores users, authentication credentials, water logs, streaks, fruit inventory, and unlocked trees in a database. Users must be authenticated to log water.
+- **WebSocket** – As users log water or complete daily goals, leaderboard updates and friend activity are broadcast to all other users in realtime.
+- **Third-party API** – When a user reaches their daily hydration goal, the backend retrieves a motivational quote from the ZenQuotes public API and displays it as a reward.
 
 
 <!-- ## AWS
