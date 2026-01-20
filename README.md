@@ -72,13 +72,14 @@ I am going to use the required technologies in the following ways.
 - **Third-party API** – When a user reaches their daily hydration goal, the backend retrieves a motivational quote from the ZenQuotes public API and displays it as a reward.
 
 
-<!-- ## 🚀 AWS deliverable
+## 🚀 AWS deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Server deployed and accessible with custom domain name** - [My server link](https://yourdomainnamehere.click).
+- [ ] **Server deployed and accessible with custom domain name** - [My server link](https://startup.drink-ly.com).
 
-## 🚀 HTML deliverable
+
+<!-- ## 🚀 HTML deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
@@ -144,4 +145,4 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [ ] **Frontend makes WebSocket connection** - I did not complete this part of the deliverable.
 - [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
 - [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
-- [ ] **Application is fully functional** - I did not complete this part of the deliverable. -->
+- [ ] **Application is fully functional** - I did not complete this part of the deliverable. --> -->
