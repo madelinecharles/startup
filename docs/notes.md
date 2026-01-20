@@ -11,12 +11,19 @@ I hadn't used Git in the terminal very much, and I enjoyed leearning that it was
 - GitHub is a website that stores a copy of your Git project online so you can back it up, share it, and collaborate.
 
 
-<!-- ## AWS
+## AWS
 
-My IP address is: 54.81.96.130
-Launching my AMI I initially put it on a private subnet. Even though it had a public IP address and the security group was right, I wasn't able to connect to it.
+Elastic IP: 107.23.217.77
 
-## Caddy
+SSH command:
+ssh -i "$env:USERPROFILE\.ssh\cs260-key.pem" ubuntu@107.23.217.77
+
+My instance is t3 micro which I think will definitely be enough for my app.
+
+Reminder: When I’m done with this class or terminate the EC2 instance, go to EC2 → Elastic IPs and release the Elastic IP to avoid being charged.
+
+
+<!-- ## Caddy
 
 No problems worked just like it said in the [instruction](https://github.com/webprogramming260/.github/blob/main/profile/webServers/https/https.md).
 
@@ -99,4 +106,4 @@ Handling the toggling of the checkboxes was particularly interesting.
     </div>
   ))}
 </div>
-``` -->
+``` --> -->
