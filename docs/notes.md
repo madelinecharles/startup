@@ -23,15 +23,25 @@ My instance is t3 micro which I think will definitely be enough for my app.
 Reminder: When I’m done with this class or terminate the EC2 instance, go to EC2 → Elastic IPs and release the Elastic IP to avoid being charged.
 
 
-<!-- ## Caddy
+## HTML Deliverable
 
-No problems worked just like it said in the [instruction](https://github.com/webprogramming260/.github/blob/main/profile/webServers/https/https.md).
+For the HTML deliverable, I created four pages for Drinkly: index.html (login), dashboard.html (main app interface), leaderboard.html (weekly rankings), and about.html (app description).
 
-## HTML
+I used semantic HTML elements like header, nav, main, footer, form, input, button, table, img, svg for the virtual tree.
 
-This was easy. I was careful to use the correct structural elements such as header, footer, main, nav, and form. The links between the three views work great using the `a` element.
+Included placeholders for all required technologies:
+- Authentication: Login form with email/password inputs and login/create buttons.
+- Database data: Leaderboard table with sample user data.
+- WebSocket data: Notifications list showing friend activities.
+- Application data: SVG tree, progress meter, streak counter, rewards list.
+- Third-party service: Inspirational quote on about page.
+- Images: Placeholder image on about page.
 
-The part I didn't like was the duplication of the header and footer code. This is messy, but it will get cleaned up when I get to React.
+Learned about proper form structure with labels, input types, and validation attributes. Used SVG for scalable graphics like the tree. Tables for tabular data like scores. Ensured all pages have consistent navigation and footer.
+
+Duplicating header/footer across pages is repetitive, but will be fixed with React later.
+
+Used Live Server extension to preview the pages in browser.
 
 ## CSS
 
