@@ -25,23 +25,15 @@ Reminder: When I’m done with this class or terminate the EC2 instance, go to E
 
 ## HTML Deliverable
 
-For the HTML deliverable, I created four pages for Drinkly: index.html (login), dashboard.html (main app interface), leaderboard.html (weekly rankings), and about.html (app description).
+I enjoyed getting to build out the static HTML structure and see how a multi-page app comes together with just HTML. 
 
-I used semantic HTML elements like header, nav, main, footer, form, input, button, table, img, svg for the virtual tree.
+I learned about semantic elements like header, nav, main, and footer to make the code more accessible and organized. Using placeholders for future technologies like WebSocket notifications and database tables helped me think about how the app will work dynamically later. 
 
-Included placeholders for all required technologies:
-- Authentication: Login form with email/password inputs and login/create buttons.
-- Database data: Leaderboard table with sample user data.
-- WebSocket data: Notifications list showing friend activities.
-- Application data: SVG tree, progress meter, streak counter, rewards list.
-- Third-party service: Inspirational quote on about page.
-- Images: Placeholder image on about page.
+ I hadn't used SVG much before, and it was cool to see how it scales for things like the virtual tree that I need to draw out and put in there soon. 
+ 
+ Tables for data and forms for login felt straightforward, but ensuring consistent navigation across pages showed me the value of reusable components (which React will fix). 
 
-Learned about proper form structure with labels, input types, and validation attributes. Used SVG for scalable graphics like the tree. Tables for tabular data like scores. Ensured all pages have consistent navigation and footer.
-
-Duplicating header/footer across pages is repetitive, but will be fixed with React later.
-
-Used Live Server extension to preview the pages in browser.
+<!--
 
 ## CSS
 
@@ -120,12 +112,4 @@ Handling the toggling of the checkboxes was particularly interesting.
 
 ## HTML Deliverable
 
-Completed the HTML deliverable for Drinkly app:
-- Created index.html with login form, navigation, and GitHub link.
-- Created dashboard.html with water logging button, progress meter, tree placeholder, and WebSocket notifications.
-- Created leaderboard.html with sample user data table.
-- Created about.html with app description, features list, inspirational quote placeholder, and SVG tree placeholder.
-- Used semantic HTML elements: header, nav, main, footer, form, input, button, table, img/svg, meter, label.
-- Added placeholders for all technologies: login, DB data, WebSocket, 3rd party API.
-- Ensured responsive design with viewport meta tag.
-- Learned about structuring HTML for a multi-page app and using placeholders for future functionality. --> -->
+It was interesting to build out the static HTML structure for Drinkly and see how a multi-page app comes together with just HTML. I learned about semantic elements like header, nav, main, and footer to make the code more accessible and organized. Using placeholders for future technologies like WebSocket notifications and database tables helped me think about how the app will work dynamically later. I hadn't used SVG much before, and it was cool to see how it scales for things like the virtual tree. Tables for data and forms for login felt straightforward, but ensuring consistent navigation across pages showed me the value of reusable components (which React will fix). Overall, it gave me a solid foundation for the visual and structural parts of the app. --> -->
