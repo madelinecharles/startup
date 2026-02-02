@@ -93,6 +93,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [ ] **DB data placeholder** - Leaderboard table with sample user hydration data.
 - [ ] **WebSocket placeholder** - Notifications list showing friend activities on dashboard.
 
+<!--
+
 ## 🚀 CSS deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
@@ -145,4 +147,4 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [ ] **Frontend makes WebSocket connection** - I did not complete this part of the deliverable.
 - [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
 - [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
-- [ ] **Application is fully functional** - I did not complete this part of the deliverable. --> -->
+- [ ] **Application is fully functional** - I did not complete this part of the deliverable. --> --> --> -->
