@@ -2,7 +2,6 @@
 
 [My Notes](docs/notes.md)
 
-
 ## 🚀 Specification Deliverable
 
 <!-- > [!NOTE]
@@ -71,13 +70,11 @@ I am going to use the required technologies in the following ways.
 - **WebSocket** – As users log water or complete daily goals, leaderboard updates and friend activity are broadcast to all other users in realtime.
 - **Third-party API** – When a user reaches their daily hydration goal, the backend retrieves a motivational quote from the ZenQuotes public API and displays it as a reward.
 
-
 ## 🚀 AWS deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
 - [ ] **Server deployed and accessible with custom domain name** - [My server link](https://startup.drink-ly.com).
-
 
 ## 🚀 HTML deliverable
 
@@ -92,7 +89,6 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [ ] **Login placeholder** - Login form with email/password inputs and login/create buttons; user name display on dashboard.
 - [ ] **DB data placeholder** - Leaderboard table with sample user hydration data.
 - [ ] **WebSocket placeholder** - Notifications list showing friend activities on dashboard.
-
 <!--
 
 ## 🚀 CSS deliverable
@@ -147,4 +143,4 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [ ] **Frontend makes WebSocket connection** - I did not complete this part of the deliverable.
 - [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
 - [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
-- [ ] **Application is fully functional** - I did not complete this part of the deliverable. --> --> --> -->
+- [ ] **Application is fully functional** - I did not complete this part of the deliverable. -->
