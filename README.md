@@ -95,15 +95,15 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **HTML pages** - I did not complete this part of the deliverable.
-- [ ] **Proper HTML element usage** - I did not complete this part of the deliverable.
-- [ ] **Links** - I did not complete this part of the deliverable.
-- [ ] **Text** - I did not complete this part of the deliverable.
-- [ ] **3rd party API placeholder** - I did not complete this part of the deliverable.
-- [ ] **Images** - I did not complete this part of the deliverable.
-- [ ] **Login placeholder** - I did not complete this part of the deliverable.
-- [ ] **DB data placeholder** - I did not complete this part of the deliverable.
-- [ ] **WebSocket placeholder** - I did not complete this part of the deliverable.
+- [ ] **HTML pages** - Four HTML pages: index.html (login), dashboard.html (main app), leaderboard.html (weekly rankings), about.html (app info).
+- [ ] **Proper HTML element usage** - Used semantic elements: header, nav, main, footer, form, input, button, table, img, svg, meter, label.
+- [ ] **Links** - Navigation links between all pages.
+- [ ] **Text** - Descriptive text on each page explaining Drinkly's features.
+- [ ] **3rd party API placeholder** - Inspirational quote on about page for future API integration.
+- [ ] **Images** - SVG placeholder for hydration tree on about page.
+- [ ] **Login placeholder** - Login form with email/password inputs and login/create buttons; user name display on dashboard.
+- [ ] **DB data placeholder** - Leaderboard table with sample user hydration data.
+- [ ] **WebSocket placeholder** - Notifications list showing friend activities on dashboard.
 
 ## 🚀 CSS deliverable
 

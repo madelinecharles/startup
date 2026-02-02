@@ -116,4 +116,16 @@ Handling the toggling of the checkboxes was particularly interesting.
     </div>
   ))}
 </div>
-``` --> -->
+```
+
+## HTML Deliverable
+
+Completed the HTML deliverable for Drinkly app:
+- Created index.html with login form, navigation, and GitHub link.
+- Created dashboard.html with water logging button, progress meter, tree placeholder, and WebSocket notifications.
+- Created leaderboard.html with sample user data table.
+- Created about.html with app description, features list, inspirational quote placeholder, and SVG tree placeholder.
+- Used semantic HTML elements: header, nav, main, footer, form, input, button, table, img/svg, meter, label.
+- Added placeholders for all technologies: login, DB data, WebSocket, 3rd party API.
+- Ensured responsive design with viewport meta tag.
+- Learned about structuring HTML for a multi-page app and using placeholders for future functionality. --> -->
