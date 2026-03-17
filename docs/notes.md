@@ -33,9 +33,34 @@ I learned about semantic elements like header, nav, main, and footer to make the
  
  Tables for data and forms for login felt straightforward, but ensuring consistent navigation across pages showed me the value of reusable components (which React will fix). 
 
+## CSS Deliverable
+
+I spent a good amount of time making Drinkly look like a real app. Here's what I learned:
+
+**Bootstrap** is a CSS framework that gives you pre-built classes for buttons, tables, progress bars, grids, and more. You add class names like `table table-hover` or `progress-bar` and it instantly looks polished. It saves a ton of time on common UI patterns.
+
+**Flexbox** is great for 1-dimensional layout (rows or columns). I used it for the header (logo left, nav right), the login button row, and the footer. Setting `display: flex` with `justify-content: space-between` on the header was especially useful.
+
+**CSS Grid** is better for 2-dimensional layouts. I used it for the dashboard (two columns: progress/tree + notifications) and the features grid on the about page. `grid-template-columns: repeat(auto-fit, minmax(190px, 1fr))` is a great pattern for responsive card layouts — it automatically wraps to fewer columns on smaller screens.
+
+**CSS Custom Properties** (`--blue-dark: #1565C0;`) make it easy to keep colors consistent across the whole stylesheet. Change it in one place and it updates everywhere.
+
+**Pseudo-selectors** I used:
+- `:hover` — nav links and buttons change on hover
+- `:focus` — input fields show a blue ring when clicked
+- `:active` — buttons shift down slightly when clicked
+- `:nth-child(even)` — alternating table row colors
+- `::before` — adds a 💧 emoji before each feature list item without changing the HTML
+
+**Google Fonts** — I imported the Nunito font using `@import url(...)` at the top of my CSS file. It gives the app a friendly, rounded look that fits the water theme.
+
+**`@media` queries** let you apply different CSS at different screen widths. I added breakpoints at 768px (tablet) and 480px (phone) to collapse the 2-column dashboard grid to 1 column and stack the header vertically.
+
+Key rule: always set `box-sizing: border-box` on `*` so padding doesn't cause elements to overflow their containers.
+
 <!--
 
-## CSS
+## CSS (Simon example notes)
 
 This took a couple hours to get it how I wanted. It was important to make it responsive and Bootstrap helped with that. It looks great on all kinds of screen sizes.
 

@@ -4,10 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drinkly - About</title>
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts: Nunito -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="main.css" />
   </head>
   <body>
     <header>
-      <h1>About Drinkly</h1>
+      <h1>💧 Drinkly</h1>
       <nav>
         <a href="index.html">Home</a>
         <a href="dashboard.html">Dashboard</a>
@@ -15,50 +27,126 @@
         <a href="about.html">About</a>
       </nav>
     </header>
+
     <main>
-      <h2>What is Drinkly?</h2>
-      <p>
-        Drinkly is a gamified water intake tracker that turns hydration into a
-        daily streak game. Users log water with a single tap and watch their
-        virtual tree grow with rain animations as they progress toward
-        personalized hydration goals, earn fruit rewards for consistency, unlock
-        new tree species, and compete with friends on a realtime leaderboard.
-      </p>
+      <!-- About Card -->
+      <div class="card">
+        <h2>What is Drinkly?</h2>
+        <p>
+          Drinkly is a gamified water intake tracker that turns hydration into a
+          daily streak game. Log water with a single tap and watch your virtual
+          tree grow with animations as you hit your personalized goals. Earn
+          fruit rewards, unlock new tree species, and compete with friends on a
+          realtime leaderboard.
+        </p>
+      </div>
+
+      <!-- Feature Grid -->
       <h3>Key Features</h3>
-      <ul>
-        <li>Secure user registration, login, and logout</li>
-        <li>Personalized daily hydration goals</li>
-        <li>One-tap water intake logging</li>
-        <li>Animated tree growth and rain effects</li>
-        <li>Streak tracking and fruit rewards</li>
-        <li>Unlockable tree types based on consistency</li>
-        <li>Weekly leaderboard</li>
-        <li>Realtime updates using WebSockets</li>
-      </ul>
-      <h3>Daily Inspiration</h3>
-      <blockquote id="quote">
-        "Stay hydrated, stay healthy! - Placeholder for ZenQuotes API"
-      </blockquote>
-      <svg width="300" height="200" viewBox="0 0 300 200">
-        <rect
+      <div class="features-grid">
+        <div class="feature-card">🔐 Secure login &amp; registration</div>
+        <div class="feature-card">🎯 Personalized daily goals</div>
+        <div class="feature-card">💧 One-tap water logging</div>
+        <div class="feature-card">🌳 Animated tree growth</div>
+        <div class="feature-card">🔥 Streak tracking</div>
+        <div class="feature-card">🍎 Fruit rewards</div>
+        <div class="feature-card">🌲 Unlockable tree types</div>
+        <div class="feature-card">🏆 Weekly leaderboard</div>
+        <div class="feature-card">⚡ Realtime WebSocket updates</div>
+      </div>
+
+      <!-- Full Feature List -->
+      <div class="card">
+        <h3>All Features</h3>
+        <ul class="feature-list">
+          <li>Secure user registration, login, and logout</li>
+          <li>Personalized daily hydration goals</li>
+          <li>One-tap water intake logging</li>
+          <li>Animated tree growth and rain effects</li>
+          <li>Streak tracking and fruit rewards</li>
+          <li>Unlockable tree species based on consistency</li>
+          <li>Weekly leaderboard with friend comparisons</li>
+          <li>Realtime friend activity via WebSockets</li>
+        </ul>
+      </div>
+
+      <!-- Daily Inspiration -->
+      <div class="card">
+        <h3>Daily Inspiration</h3>
+        <blockquote id="quote">
+          "Water is the driving force of all nature." — Placeholder for
+          ZenQuotes API
+        </blockquote>
+      </div>
+
+      <!-- SVG Hydration Diagram -->
+      <div class="card" style="text-align: center">
+        <h3>Hydration Tracker Preview</h3>
+        <svg
           width="300"
-          height="200"
-          fill="#f0f0f0"
-          stroke="#000"
-          stroke-width="2"
-        />
-        <text x="150" y="100" text-anchor="middle" font-size="20">
-          Placeholder for Hydration Tree SVG
-        </text>
-      </svg>
+          height="160"
+          viewBox="0 0 300 160"
+          style="max-width: 100%"
+        >
+          <rect
+            width="300"
+            height="160"
+            rx="12"
+            fill="#E3F2FD"
+            stroke="#42A5F5"
+            stroke-width="2"
+          />
+          <!-- Water fill bar -->
+          <rect x="20" y="80" width="130" height="60" rx="6" fill="#BBDEFB" />
+          <rect x="20" y="110" width="130" height="30" rx="6" fill="#42A5F5" />
+          <text
+            x="85"
+            y="128"
+            text-anchor="middle"
+            font-family="Nunito,sans-serif"
+            font-size="13"
+            fill="white"
+            font-weight="700"
+          >
+            50 oz / 100 oz
+          </text>
+          <!-- Tree icon placeholder -->
+          <text x="220" y="75" text-anchor="middle" font-size="48">🌳</text>
+          <text
+            x="220"
+            y="110"
+            text-anchor="middle"
+            font-family="Nunito,sans-serif"
+            font-size="12"
+            fill="#1565C0"
+            font-weight="600"
+          >
+            Your Tree
+          </text>
+          <text
+            x="85"
+            y="70"
+            text-anchor="middle"
+            font-family="Nunito,sans-serif"
+            font-size="12"
+            fill="#1565C0"
+            font-weight="600"
+          >
+            Daily Progress
+          </text>
+        </svg>
+      </div>
     </main>
+
     <footer>
       <p>Created by Madeline Xu</p>
       <p>
-        <a href="https://github.com/yourusername/startup" target="_blank"
+        <a href="https://github.com/madelinecharles/startup" target="_blank"
           >View on GitHub</a
         >
       </p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>

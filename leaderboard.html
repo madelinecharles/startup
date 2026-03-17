@@ -4,10 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Drinkly - Leaderboard</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Google Fonts: Nunito -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="main.css" />
   </head>
   <body>
     <header>
-      <h1>Drinkly Leaderboard</h1>
+      <h1>💧 Drinkly</h1>
       <nav>
         <a href="index.html">Home</a>
         <a href="dashboard.html">Dashboard</a>
@@ -15,47 +21,72 @@
         <a href="about.html">About</a>
       </nav>
     </header>
+
     <main>
-      <h2>Weekly Hydration Leaderboard</h2>
-      <p>Compete with friends and see who stays hydrated the most!</p>
-      <table>
-        <thead>
-          <tr>
-            <th>Rank</th>
-            <th>User</th>
-            <th>Total Intake (oz)</th>
-            <th>Streak (days)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>Alice</td>
-            <td>56</td>
-            <td>7</td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>Bob</td>
-            <td>48</td>
-            <td>5</td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>You</td>
-            <td>42</td>
-            <td>4</td>
-          </tr>
-        </tbody>
-      </table>
+      <div class="card">
+        <h2>🏆 Weekly Hydration Leaderboard</h2>
+        <p style="color: var(--text-muted); margin-bottom: 1.2rem;">
+          Compete with friends and see who stays the most hydrated!
+        </p>
+
+        <table class="table table-hover">
+          <thead>
+            <tr>
+              <th>Rank</th>
+              <th>User</th>
+              <th>Total Intake (oz)</th>
+              <th>Streak (days)</th>
+              <th>Tree</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="rank-gold">
+              <td>🥇 1</td>
+              <td>Alice</td>
+              <td>420</td>
+              <td>7</td>
+              <td>🌳 Oak</td>
+            </tr>
+            <tr class="rank-silver">
+              <td>🥈 2</td>
+              <td>Bob</td>
+              <td>385</td>
+              <td>6</td>
+              <td>🍑 Peach</td>
+            </tr>
+            <tr class="rank-bronze you-row">
+              <td>🥉 3</td>
+              <td>You (Madeline)</td>
+              <td>312</td>
+              <td>5</td>
+              <td>🍎 Apple</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Sarah</td>
+              <td>290</td>
+              <td>4</td>
+              <td>🍋 Lemon</td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>James</td>
+              <td>245</td>
+              <td>3</td>
+              <td>🌱 Sprout</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </main>
+
     <footer>
       <p>Created by Madeline Xu</p>
       <p>
-        <a href="https://github.com/yourusername/startup" target="_blank"
-          >View on GitHub</a
-        >
+        <a href="https://github.com/madelinecharles/startup" target="_blank">View on GitHub</a>
       </p>
     </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
