@@ -32,9 +32,35 @@
 }
 
 #treePlaceholder {
-  text-align: center;
   padding: 1rem;
   background-color: #e3f2fd;
+}
+
+.tree-stages {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 0.5rem;
+}
+
+.tree-stage {
+  text-align: center;
+}
+
+.tree-stage img {
+  width: 70px;
+  height: 70px;
+  object-fit: contain;
+}
+
+.tree-stage p {
+  font-size: 0.75rem;
+  margin: 0.3rem 0 0;
+}
+
+.active-stage img {
+  border: 2px solid #1565c0;
+  border-radius: 6px;
 }
 
 #notifications li {
