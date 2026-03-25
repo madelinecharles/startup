@@ -1,8 +1,7 @@
-/* Drinkly — shared layout. Custom font overrides Bootstrap with !important. */
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap");
 
-body {
-  font-family: 'Nunito', sans-serif !important;
+.body {
+  font-family: "Nunito", sans-serif !important;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
