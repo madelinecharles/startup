@@ -100,6 +100,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **Responsive to window resizing using flexbox and/or grid display** - Flexbox used in header and login page; CSS grid used in dashboard (2-column) and about page (feature grid); media queries collapse layouts at 600px.
 - [x] **Use of a imported font** - Nunito imported from Google Fonts and applied via font-family on all pages.
 - [x] **Use of different types of selectors including element, class, ID, and pseudo selectors** - Element selectors (body, header, th, td, blockquote), class selectors (.card, .streak-badge, .welcome-banner), ID selectors (#logWater, #notifications, #treePlaceholder), and pseudo selector (nav a:hover).
+- Personal note: when I update CSS, I just SSH in and run `/home/ubuntu/services/deploy-startup.sh` to pull and copy files into `/home/ubuntu/services/startup/public`.
 
 ## 🚀 React part 1: Routing deliverable
 
