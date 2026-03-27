@@ -74,21 +74,21 @@ I am going to use the required technologies in the following ways.
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Server deployed and accessible with custom domain name** - [My server link](https://startup.drink-ly.com).
+- [x] **Server deployed and accessible with custom domain name** - [My server link](https://startup.drink-ly.com).
 
 ## 🚀 HTML deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **HTML pages** - Four HTML pages: index.html (login), dashboard.html (main app), leaderboard.html (weekly rankings), about.html (app info).
-- [ ] **Proper HTML element usage** - Used semantic elements: header, nav, main, footer, form, input, button, table, img, svg, meter, label.
-- [ ] **Links** - Navigation links between all pages.
-- [ ] **Text** - Descriptive text on each page explaining Drinkly's features.
-- [ ] **3rd party API placeholder** - Inspirational quote on about page for future API integration.
-- [ ] **Images** - SVG placeholder for hydration tree on about page.
-- [ ] **Login placeholder** - Login form with email/password inputs and login/create buttons; user name display on dashboard.
-- [ ] **DB data placeholder** - Leaderboard table with sample user hydration data.
-- [ ] **WebSocket placeholder** - Notifications list showing friend activities on dashboard.
+- [x] **HTML pages** - Four HTML pages: index.html (login), dashboard.html (main app), leaderboard.html (weekly rankings), about.html (app info).
+- [x] **Proper HTML element usage** - Used semantic elements: header, nav, main, footer, form, input, button, table, img, svg, meter, label.
+- [x] **Links** - Navigation links between all pages.
+- [x] **Text** - Descriptive text on each page explaining Drinkly's features.
+- [x] **3rd party API placeholder** - Inspirational quote on about page for future API integration.
+- [x] **Images** - SVG placeholder for hydration tree on about page.
+- [x] **Login placeholder** - Login form with email/password inputs and login/create buttons; user name display on dashboard.
+- [x] **DB data placeholder** - Leaderboard table with sample user hydration data.
+- [x] **WebSocket placeholder** - Notifications list showing friend activities on dashboard.
 
 ## 🚀 CSS deliverable
 
@@ -100,7 +100,6 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **Responsive to window resizing using flexbox and/or grid display** - Flexbox used in header and login page; CSS grid used in dashboard (2-column) and about page (feature grid); media queries collapse layouts at 600px.
 - [x] **Use of a imported font** - Nunito imported from Google Fonts and applied via font-family on all pages.
 - [x] **Use of different types of selectors including element, class, ID, and pseudo selectors** - Element selectors (body, header, th, td, blockquote), class selectors (.card, .streak-badge, .welcome-banner), ID selectors (#logWater, #notifications, #treePlaceholder), and pseudo selector (nav a:hover).
-- Personal note: when I update CSS, I just SSH in and run `/home/ubuntu/services/deploy-startup.sh` to pull and copy files into `/home/ubuntu/services/startup/public`.
 
 ## 🚀 React part 1: Routing deliverable
 
