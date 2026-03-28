@@ -4,12 +4,12 @@
 
 ## Startup Specification
 
-It was interesting to see how a web app works together and to look at all the different services required. It's cool how Node.js lets javascript run on a server instead of the backend, and how Route 53 (AWS DNS) translates the domain name (e.g. myapp.com) into the IP address of the server. 
+It was interesting to see how a web app works together and to look at all the different services required. It's cool how Node.js lets javascript run on a server instead of the backend, and how Route 53 (AWS DNS) translates the domain name (e.g. myapp.com) into the IP address of the server.
 
 I hadn't used Git in the terminal very much, and I enjoyed leearning that it was available. I now understand a clearer difference between Git and GitHub:
+
 - Git is the tool on your computer that tracks versions of your project
 - GitHub is a website that stores a copy of your Git project online so you can back it up, share it, and collaborate.
-
 
 ## AWS
 
@@ -22,16 +22,15 @@ My instance is t3 micro which I think will definitely be enough for my app.
 
 Reminder: When I’m done with this class or terminate the EC2 instance, go to EC2 → Elastic IPs and release the Elastic IP to avoid being charged.
 
-
 ## HTML Deliverable
 
-I enjoyed getting to build out the static HTML structure and see how a multi-page app comes together with just HTML. 
+I enjoyed getting to build out the static HTML structure and see how a multi-page app comes together with just HTML.
 
-I learned about semantic elements like header, nav, main, and footer to make the code more accessible and organized. Using placeholders for future technologies like WebSocket notifications and database tables helped me think about how the app will work dynamically later. 
+I learned about semantic elements like header, nav, main, and footer to make the code more accessible and organized. Using placeholders for future technologies like WebSocket notifications and database tables helped me think about how the app will work dynamically later.
 
- I hadn't used SVG much before, and it was cool to see how it scales for things like the virtual tree that I need to draw out and put in there soon. 
- 
- Tables for data and forms for login felt straightforward, but ensuring consistent navigation across pages showed me the value of reusable components (which React will fix). 
+I hadn't used SVG much before, and it was cool to see how it scales for things like the virtual tree that I need to draw out and put in there soon.
+
+Tables for data and forms for login felt straightforward, but ensuring consistent navigation across pages showed me the value of reusable components (which React will fix).
 
 ## CSS Deliverable
 
@@ -46,6 +45,7 @@ I spent a good amount of time making Drinkly look like a real app. Here's what I
 **CSS Custom Properties** (`--blue-dark: #1565C0;`) make it easy to keep colors consistent across the whole stylesheet. Change it in one place and it updates everywhere.
 
 **Pseudo-selectors** I used:
+
 - `:hover` — nav links and buttons change on hover
 - `:focus` — input fields show a blue ring when clicked
 - `:active` — buttons shift down slightly when clicked
@@ -62,6 +62,19 @@ Key rule: always set `box-sizing: border-box` on `*` so padding doesn't cause el
 
 I cloned the Simon CSS repo, ran it with Live Server, and played with the CSS to see changes in the browser. I used the `deployFiles.sh` script to push it to my server so it shows at my simon subdomain.
 
+## React Part 1: Routing
+
+Converting Drinkly from a multi-page HTML/CSS app to a React SPA was a significant restructuring. The biggest shift was replacing the four separate HTML files with a single index.html entry point that loads everything through React.
+
+Setting up Vite was straightforward — just npm install and updating the scripts in package.json. The harder part was reorganizing the file structure: moving assets into public/, splitting each page into its own src/ subfolder with a .jsx and .css file, and understanding that the header and footer now live once in app.jsx instead of being repeated on every page.
+
+React Router replaced all the `<a href="page.html">` links with `<NavLink to="/route">` components. The BrowserRouter wraps the whole app, and Routes/Route definitions tell React which component to display for each URL — no page reloads needed.
+
+Key things I learned:
+
+- `className` replaces `class` in JSX since `class` is a reserved JavaScript keyword
+- The `index.html` at the root is just a shell with `<div id="root">` — React injects all the content via JavaScript
+- Component props like `userName` and `onLogin` are declared now but will be wired up with actual logic in React Part 2
 <!--
 
 ## CSS (Simon example notes)
@@ -105,13 +118,33 @@ I also used SVG to make the icon and logo for the app. This turned out to be a p
 ```html
 <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
   <rect width="100" height="100" fill="#0066aa" rx="10" ry="10" />
-  <text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" font-size="72" font-family="Arial" fill="white">C</text>
+  <text
+    x="50%"
+    y="50%"
+    dominant-baseline="central"
+    text-anchor="middle"
+    font-size="72"
+    font-family="Arial"
+    fill="white"
+  >
+    C
+  </text>
 </svg>
 ```
 
 ## React Part 1: Routing
 
-Setting up Vite and React was pretty simple. I had a bit of trouble because of conflicting CSS. This isn't as straight forward as you would find with Svelte or Vue, but I made it work in the end. If there was a ton of CSS it would be a real problem. It sure was nice to have the code structured in a more usable way.
+Converting Drinkly from a multi-page HTML/CSS app to a React SPA was a significant restructuring. The biggest shift was replacing the four separate HTML files with a single index.html entry point that loads everything through React.
+
+Setting up Vite was straightforward — just npm install and updating the scripts in package.json. The harder part was reorganizing the file structure: moving assets into public/, splitting each page into its own src/ subfolder with a .jsx and .css file, and understanding that the header and footer now live once in app.jsx instead of being repeated on every page.
+
+React Router replaced all the `<a href="page.html">` links with `<NavLink to="/route">` components. The BrowserRouter wraps the whole app, and Routes/Route definitions tell React which component to display for each URL — no page reloads needed.
+
+Key things I learned:
+
+- `className` replaces `class` in JSX since `class` is a reserved JavaScript keyword
+- The `index.html` at the root is just a shell with `<div id="root">` — React injects all the content via JavaScript
+- Component props like `userName` and `onLogin` are declared now but will be wired up with actual logic in React Part 2
 
 ## React Part 2: Reactivity
 

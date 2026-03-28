@@ -105,9 +105,9 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Bundled using Vite** - I did not complete this part of the deliverable.
-- [ ] **Components** - I did not complete this part of the deliverable.
-- [ ] **Router** - I did not complete this part of the deliverable.
+- [x] **Bundled using Vite** - Installed Vite as a dev dependency and configured dev/build/preview scripts in package.json.
+- [x] **Components** - Created Login, Dashboard, Leaderboard, and About components, each in their own src/ subfolder with associated CSS. App component contains shared header and footer.
+- [x] **Router** - Implemented React Router with BrowserRouter, NavLink, and Routes in app.jsx. Routes defined for /, /dashboard, /leaderboard, and /about.
 
 ## 🚀 React part 2: Reactivity deliverable
 
