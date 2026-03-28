@@ -1,3 +1,5 @@
+import './leaderboard.css';
+
 export default function Leaderboard() {
   return (
     <main className="container-fluid bg-secondary text-center">
