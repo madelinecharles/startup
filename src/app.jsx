@@ -57,7 +57,7 @@ export default function App() {
         <Header userName={userName} onLogout={onLogout} />
         <main className="container-fluid">
           <Routes>
-            <Route path="/" element={<Login userName={userName} onLogin={onLogin} />} />
+            <Route path="/" element={<Login userName={userName} onLogin={onLogin} onLogout={onLogout} />} />
             <Route path="/dashboard" element={<Dashboard userName={userName} />} />
             <Route path="/leaderboard" element={<Leaderboard />} />
             <Route path="/about" element={<About />} />

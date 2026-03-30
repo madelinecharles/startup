@@ -1,36 +1,62 @@
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import Button from 'react-bootstrap/Button';
 import './index.css';
 
-export default function Login({ userName, onLogin }) {
+function Unauthenticated({ onLogin }) {
+  const [name, setName] = useState('');
+
+  function handleLogin(e) {
+    e.preventDefault();
+    if (name.trim()) {
+      onLogin(name.trim());
+    }
+  }
+
   return (
-    <main>
-      <div className="login-wrapper">
-        <div className="login-card">
-          <h2>Welcome Back</h2>
-          <form>
-            <label htmlFor="email">Email</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="you@example.com"
-              required
-            />
+    <form onSubmit={handleLogin}>
+      <div className='input-group mb-3'>
+        <span className='input-group-text'>Name</span>
+        <input
+          className='form-control'
+          type='text'
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder='Your name'
+        />
+      </div>
+      <Button variant='primary' type='submit' disabled={!name.trim()}>
+        Login
+      </Button>
+    </form>
+  );
+}
 
-            <label htmlFor="password">Password</label>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              placeholder="••••••••"
-              required
-            />
+function Authenticated({ userName, onLogout }) {
+  const navigate = useNavigate();
 
-            <div className="login-buttons">
-              <button type="submit" className="btn-primary-custom">Login</button>
-              <button type="button" className="btn-outline-custom">Create Account</button>
-            </div>
-          </form>
-        </div>
+  return (
+    <div>
+      <div className='playerName'>{userName}</div>
+      <Button variant='primary' onClick={() => navigate('/dashboard')}>
+        Play
+      </Button>
+      <Button variant='secondary' onClick={onLogout}>
+        Logout
+      </Button>
+    </div>
+  );
+}
+
+export default function Login({ userName, onLogin, onLogout }) {
+  return (
+    <main className='container-fluid bg-primary text-center'>
+      <div>
+        <h1 className='text-white fw-bold'>Welcome to Drinkly</h1>
+        {userName
+          ? <Authenticated userName={userName} onLogout={onLogout} />
+          : <Unauthenticated onLogin={onLogin} />
+        }
       </div>
     </main>
   );
