@@ -44,6 +44,7 @@ export default function App() {
   const [userName, setUserName] = useState('');
 
   function onLogin(name) {
+    localStorage.removeItem('intake');
     setUserName(name);
   }
 

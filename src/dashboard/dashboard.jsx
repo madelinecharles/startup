@@ -4,6 +4,7 @@ import './dashboard.css';
 export default function Dashboard({ userName }) {
   const [streak, setStreak] = useState(0);
   const [intake, setIntake] = useState(0);
+  const [weeklyTotal, setWeeklyTotal] = useState(0);
   const goal = 100;
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export default function Dashboard({ userName }) {
     } else if (savedStreak.lastDate === yesterdayStr) {
       newStreak = savedStreak.days + 1;
     } else {
-      newStreak = 1;
+      newStreak = 0;
     }
     localStorage.setItem('streak', JSON.stringify({ days: newStreak, lastDate: today }));
     setStreak(newStreak);
@@ -34,6 +35,21 @@ export default function Dashboard({ userName }) {
       localStorage.setItem('intake', JSON.stringify({ oz: 0, date: today }));
       setIntake(0);
     }
+
+    // Weekly total: accumulate oz, reset if week has changed
+    const getWeekStart = () => {
+      const d = new Date();
+      d.setDate(d.getDate() - d.getDay());
+      return d.toLocaleDateString();
+    };
+    const weekStart = getWeekStart();
+    const savedWeekly = JSON.parse(localStorage.getItem('weekly') || '{"oz":0,"weekStart":""}');
+    if (savedWeekly.weekStart === weekStart) {
+      setWeeklyTotal(savedWeekly.oz);
+    } else {
+      localStorage.setItem('weekly', JSON.stringify({ oz: 0, weekStart }));
+      setWeeklyTotal(0);
+    }
   }, []);
 
   function logWater() {
@@ -41,7 +57,44 @@ export default function Dashboard({ userName }) {
     const newIntake = intake + 8;
     localStorage.setItem('intake', JSON.stringify({ oz: newIntake, date: today }));
     setIntake(newIntake);
+
+    const getWeekStart = () => {
+      const d = new Date();
+      d.setDate(d.getDate() - d.getDay());
+      return d.toLocaleDateString();
+    };
+    const newWeekly = weeklyTotal + 8;
+    localStorage.setItem('weekly', JSON.stringify({ oz: newWeekly, weekStart: getWeekStart() }));
+    setWeeklyTotal(newWeekly);
   }
+
+  function newDay() {
+    localStorage.removeItem('intake');
+    setIntake(0);
+
+    const newStreak = streak + 1;
+    const today = new Date().toLocaleDateString();
+    localStorage.setItem('streak', JSON.stringify({ days: newStreak, lastDate: today }));
+    setStreak(newStreak);
+  }
+
+  function getTreeImage(pct, currentStreak) {
+    if (pct >= 100) {
+      const fullyGrown = [
+        { src: '/apple tree.png',      label: 'Apple Tree' },
+        { src: '/orange tree.png',     label: 'Orange Tree' },
+        { src: '/watermelon tree.png', label: 'Watermelon Tree' },
+      ];
+      return fullyGrown[(currentStreak - 1) % fullyGrown.length];
+    }
+    if (pct >= 75) return { src: '/tree.png',         label: 'Tree' };
+    if (pct >= 50) return { src: '/more sapling.png', label: 'Growing Sapling' };
+    if (pct >= 25) return { src: '/sapling.png',      label: 'Sapling' };
+    return null;
+  }
+
+  const pct = Math.min(Math.round((intake / goal) * 100), 100);
+  const treeImage = getTreeImage(pct, streak);
 
   return (
     <main className="container-fluid">
@@ -70,15 +123,17 @@ export default function Dashboard({ userName }) {
               </div>
               <span className="badge bg-success mb-2">🔥 {streak}-Day Streak</span>
               <button className="btn btn-primary ms-2" onClick={logWater}>+ Log Water Intake</button>
+              <button className="btn btn-secondary ms-2" onClick={newDay}>New Day</button>
             </div>
           </div>
 
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">Your Virtual Tree</h5>
-              <div>
-                <p>Your tree grows as you stay hydrated!</p>
-              </div>
+              {treeImage
+                ? <img src={treeImage.src} alt={treeImage.label} style={{ maxHeight: '180px' }} />
+                : <p className="text-muted">Keep drinking! Your tree will appear at 25%.</p>
+              }
             </div>
           </div>
         </div>
@@ -89,10 +144,10 @@ export default function Dashboard({ userName }) {
             <div className="card-body">
               <h5 className="card-title">Your Stats</h5>
               <ul className="list-unstyled">
-                <li>📅 Current streak: <strong></strong></li>
-                <li>💧 Total this week: <strong></strong></li>
-                <li>🌳 Tree level: <strong></strong></li>
-                <li>🏅 Rank: <strong></strong></li>
+                <li>📅 Current streak: <strong>{streak} day{streak !== 1 ? 's' : ''}</strong></li>
+                <li>💧 Total this week: <strong>{weeklyTotal} oz</strong></li>
+                <li>🌳 Tree level: <strong>{treeImage ? treeImage.label : 'No tree yet'}</strong></li>
+                <li>🏅 Rank: <strong>{pct >= 100 ? 'Hydration Master' : pct >= 75 ? 'Almost There' : pct >= 50 ? 'Halfway Hero' : pct >= 25 ? 'Getting Started' : 'Just Beginning'}</strong></li>
               </ul>
             </div>
           </div>
