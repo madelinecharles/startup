@@ -52,6 +52,30 @@ export default function Dashboard({ userName }) {
     }
   }, []);
 
+  function updatePlayerBoard(name, newStreak, newWeekly, newPct) {
+    const today = new Date().toLocaleDateString();
+    const treeLabel = (() => {
+      if (newPct >= 100) {
+        const trees = ['Apple Tree', 'Orange Tree', 'Watermelon Tree'];
+        return trees[(newStreak - 1) % trees.length];
+      }
+      if (newPct >= 75) return 'Tree';
+      if (newPct >= 50) return 'Growing Sapling';
+      if (newPct >= 25) return 'Sapling';
+      return 'No tree yet';
+    })();
+
+    const players = JSON.parse(localStorage.getItem('players') || '[]');
+    const idx = players.findIndex(p => p.name === name);
+    const entry = { name, weeklyTotal: newWeekly, streak: newStreak, treeLabel, lastDate: today };
+    if (idx >= 0) {
+      players[idx] = entry;
+    } else {
+      players.push(entry);
+    }
+    localStorage.setItem('players', JSON.stringify(players));
+  }
+
   function logWater() {
     const today = new Date().toLocaleDateString();
     const newIntake = intake + 8;
@@ -66,6 +90,9 @@ export default function Dashboard({ userName }) {
     const newWeekly = weeklyTotal + 8;
     localStorage.setItem('weekly', JSON.stringify({ oz: newWeekly, weekStart: getWeekStart() }));
     setWeeklyTotal(newWeekly);
+
+    const newPct = Math.min(Math.round((newIntake / goal) * 100), 100);
+    updatePlayerBoard(userName, streak, newWeekly, newPct);
   }
 
   function newDay() {
@@ -76,6 +103,8 @@ export default function Dashboard({ userName }) {
     const today = new Date().toLocaleDateString();
     localStorage.setItem('streak', JSON.stringify({ days: newStreak, lastDate: today }));
     setStreak(newStreak);
+
+    updatePlayerBoard(userName, newStreak, weeklyTotal, 0);
   }
 
   function getTreeImage(pct, currentStreak) {

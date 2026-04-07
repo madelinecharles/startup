@@ -15,8 +15,12 @@ function Header({ userName, onLogout }) {
         <a className="navbar-brand" href="#">💧 Drinkly</a>
         <menu className="navbar-nav">
           <li className="nav-item"><NavLink className="nav-link" to="/">Home</NavLink></li>
-          <li className="nav-item"><NavLink className="nav-link" to="/dashboard">Dashboard</NavLink></li>
-          <li className="nav-item"><NavLink className="nav-link" to="/leaderboard">Leaderboard</NavLink></li>
+          {userName && (
+            <li className="nav-item"><NavLink className="nav-link" to="/dashboard">Dashboard</NavLink></li>
+          )}
+          {userName && (
+            <li className="nav-item"><NavLink className="nav-link" to="/leaderboard">Leaderboard</NavLink></li>
+          )}
           <li className="nav-item"><NavLink className="nav-link" to="/about">About</NavLink></li>
           {userName && (
             <li className="nav-item">
