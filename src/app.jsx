@@ -45,7 +45,7 @@ function Footer() {
 }
 
 export default function App() {
-  const [userName, setUserName] = useState('');
+  const [userName, setUserName] = useState(localStorage.getItem('userName') || '');
 
   function onLogin(name) {
     const currentUser = localStorage.getItem('userName');

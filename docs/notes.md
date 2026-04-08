@@ -156,30 +156,19 @@ Key things I learned:
 
 ## React Part 2: Reactivity
 
-This was a lot of fun to see it all come together. I had to keep remembering to use React state instead of just manipulating the DOM directly.
+This deliverable made Drinkly fully interactive. The biggest shift was thinking in React state instead of directly manipulating the DOM.
 
-Handling the toggling of the checkboxes was particularly interesting.
+**What I implemented:**
 
-```jsx
-<div className="input-group sound-button-container">
-  {calmSoundTypes.map((sound, index) => (
-    <div key={index} className="form-check form-switch">
-      <input
-        className="form-check-input"
-        type="checkbox"
-        value={sound}
-        id={sound}
-        onChange={() => togglePlay(sound)}
-        checked={selectedSounds.includes(sound)}
-      ></input>
-      <label className="form-check-label" htmlFor={sound}>
-        {sound}
-      </label>
-    </div>
-  ))}
-</div>
-```
+- **Login with localStorage**: Used `useState` and `localStorage` to persist the user's name across page refreshes. A new user login clears the previous user's intake and streak data.
+- **Dashboard interactivity**: The hydration progress bar, streak badge, and virtual tree all update reactively as the user clicks `+ Log Water Intake`. Used `useState` for `intake`, `streak`, and `weeklyTotal`, and `useEffect` to load saved data on mount.
+- **Virtual tree progression**: The tree image shown changes based on both hydration percentage (25/50/75/100%) and streak day. At 100% it cycles through 8 different tree types (Tree with Leaves → Apple → Orange → Watermelon → Peach → Pineapple → Grapes → Tree of Life), unlocking a special message on day 7.
+- **Leaderboard from localStorage**: Used `useEffect` to load the shared `players` list, filter out anyone inactive for 2+ days, sort by weekly total, and render rows — same pattern as Simon's Scores page.
+- **Mocked WebSocket with setInterval**: Created `drinkNotifier.js` with a `setInterval` that simulates peer users logging water every 5 seconds. The Leaderboard listens via `addHandler`/`removeHandler` and displays a live activity feed. This will be replaced with real WebSocket messages later.
+- **Mocked ZenQuotes API**: The About page uses `useEffect` to pick a random quote from a hard-coded array that matches the real ZenQuotes API format `{ q, a }`.
+- **Route guarding**: Dashboard and Leaderboard nav links are hidden when not logged in, matching Simon React's pattern.
 
-## HTML Deliverable
-
-It was interesting to build out the static HTML structure for Drinkly and see how a multi-page app comes together with just HTML. I learned about semantic elements like header, nav, main, and footer to make the code more accessible and organized. Using placeholders for future technologies like WebSocket notifications and database tables helped me think about how the app will work dynamically later. I hadn't used SVG much before, and it was cool to see how it scales for things like the virtual tree. Tables for data and forms for login felt straightforward, but ensuring consistent navigation across pages showed me the value of reusable components (which React will fix). Overall, it gave me a solid foundation for the visual and structural parts of the app. --> -->
+Key things I learned:
+- `useEffect` with `[]` runs once on mount — perfect for loading localStorage data
+- State updates are asynchronous so you need to compute new values before calling both `setState` and `localStorage.setItem`
+- `useEffect` cleanup functions (returning a function) are important for removing event handlers when a component unmounts
