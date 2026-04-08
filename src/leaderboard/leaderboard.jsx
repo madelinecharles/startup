@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { DrinkEvent, DrinkNotifier } from './drinkNotifier';
 import './leaderboard.css';
 
@@ -13,15 +13,15 @@ export default function Leaderboard() {
     const yesterdayStr = yesterday.toLocaleDateString();
 
     const all = JSON.parse(localStorage.getItem('players') || '[]');
-    const active = all.filter(p => p.lastDate === today || p.lastDate === yesterdayStr);
+    const active = all.filter((p) => p.lastDate === today || p.lastDate === yesterdayStr);
     active.sort((a, b) => b.weeklyTotal - a.weeklyTotal);
     setPlayers(active);
 
-    // Listen for simulated peer events (will be replaced with WebSocket)
+    // Simulated live activity (will be WebSocket later)
     function handleEvent(event) {
       if (event.type === DrinkEvent.Log) {
-        setFeed(prev => {
-          const msg = `${event.from} just logged ${event.value.oz} oz 💧`;
+        setFeed((prev) => {
+          const msg = `${event.from} just logged ${event.value.oz} oz`;
           const next = [msg, ...prev];
           return next.length > 5 ? next.slice(0, 5) : next;
         });
@@ -48,13 +48,15 @@ export default function Leaderboard() {
       ))
     : (
         <tr>
-          <td colSpan='5'>No active players yet. Start logging water!</td>
+          <td colSpan="5">No active players yet. Start logging water!</td>
         </tr>
       );
 
   return (
     <main className="container-fluid text-center">
-      <h2 className="pt-3" style={{ color: '#1a237e' }}>🏆 Weekly Hydration Leaderboard</h2>
+      <h2 className="pt-3" style={{ color: '#1a237e' }}>
+        &#127942; Weekly Hydration Leaderboard
+      </h2>
       <p style={{ color: '#1565c0' }}>Compete with friends and see who stays the most hydrated!</p>
 
       <table className="table table-hover table-striped-columns">
@@ -71,11 +73,13 @@ export default function Leaderboard() {
       </table>
 
       <div className="mt-3">
-        <h5 style={{ color: '#1a237e' }}>⚡ Live Activity</h5>
+        <h5 style={{ color: '#1a237e' }}>&#9889; Live Activity</h5>
         {feed.length === 0
           ? <p className="text-muted">Waiting for activity...</p>
           : feed.map((msg, i) => (
-              <div key={i} className="text-muted" style={{ fontSize: '0.9rem' }}>{msg}</div>
+              <div key={i} className="text-muted" style={{ fontSize: '0.9rem' }}>
+                {msg}
+              </div>
             ))
         }
       </div>

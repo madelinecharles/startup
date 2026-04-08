@@ -1,4 +1,4 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
+﻿import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
 
 import { useState } from 'react';
@@ -12,7 +12,7 @@ function Header({ userName, onLogout }) {
   return (
     <header>
       <nav className="navbar fixed-top navbar-dark bg-primary">
-        <a className="navbar-brand" href="#">💧 Drinkly</a>
+        <a className="navbar-brand" href="#">&#128167; Drinkly</a>
         <menu className="navbar-nav">
           <li className="nav-item"><NavLink className="nav-link" to="/">Home</NavLink></li>
           {userName && (
@@ -38,7 +38,7 @@ function Footer() {
     <footer className="bg-primary text-white">
       <div className="container-fluid d-flex justify-content-between">
         <span className="text-reset">Madeline Xu</span>
-        <a className="text-reset" href="https://github.com/madelinecharles/startup" target="_blank">GitHub</a>
+        <a className="text-reset" href="https://github.com/xumadeline/startup" target="_blank">GitHub</a>
       </div>
     </footer>
   );
@@ -78,3 +78,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+

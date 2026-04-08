@@ -1,33 +1,45 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import './dashboard.css';
+
+const GOAL_OZ = 100;
+
+function getWeekStart() {
+  const d = new Date();
+  d.setDate(d.getDate() - d.getDay());
+  return d.toLocaleDateString();
+}
+
+function getRankLabel(pct) {
+  if (pct >= 100) return 'Hydration Master';
+  if (pct >= 75) return 'Almost There';
+  if (pct >= 50) return 'Halfway Hero';
+  if (pct >= 25) return 'Getting Started';
+  return 'Just Beginning';
+}
 
 export default function Dashboard({ userName }) {
   const [streak, setStreak] = useState(0);
   const [intake, setIntake] = useState(0);
   const [weeklyTotal, setWeeklyTotal] = useState(0);
-  const goal = 100;
 
   useEffect(() => {
     const today = new Date().toLocaleDateString();
-
-    // Streak logic
-    const savedStreak = JSON.parse(localStorage.getItem('streak') || '{"days":0,"lastDate":""}');
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
     const yesterdayStr = yesterday.toLocaleDateString();
 
-    let newStreak;
+    // Streak
+    const savedStreak = JSON.parse(localStorage.getItem('streak') || '{"days":0,"lastDate":""}');
+    let nextStreak = 0;
     if (savedStreak.lastDate === today) {
-      newStreak = savedStreak.days;
+      nextStreak = savedStreak.days;
     } else if (savedStreak.lastDate === yesterdayStr) {
-      newStreak = savedStreak.days + 1;
-    } else {
-      newStreak = 0;
+      nextStreak = savedStreak.days + 1;
     }
-    localStorage.setItem('streak', JSON.stringify({ days: newStreak, lastDate: today }));
-    setStreak(newStreak);
+    localStorage.setItem('streak', JSON.stringify({ days: nextStreak, lastDate: today }));
+    setStreak(nextStreak);
 
-    // Intake resets every 24 hours
+    // Intake (resets daily)
     const savedIntake = JSON.parse(localStorage.getItem('intake') || '{"oz":0,"date":""}');
     if (savedIntake.date === today) {
       setIntake(savedIntake.oz);
@@ -36,12 +48,7 @@ export default function Dashboard({ userName }) {
       setIntake(0);
     }
 
-    // Weekly total: accumulate oz, reset if week has changed
-    const getWeekStart = () => {
-      const d = new Date();
-      d.setDate(d.getDate() - d.getDay());
-      return d.toLocaleDateString();
-    };
+    // Weekly total (resets weekly)
     const weekStart = getWeekStart();
     const savedWeekly = JSON.parse(localStorage.getItem('weekly') || '{"oz":0,"weekStart":""}');
     if (savedWeekly.weekStart === weekStart) {
@@ -59,7 +66,7 @@ export default function Dashboard({ userName }) {
     const treeSrc = tree ? tree.src : null;
 
     const players = JSON.parse(localStorage.getItem('players') || '[]');
-    const idx = players.findIndex(p => p.name === name);
+    const idx = players.findIndex((p) => p.name === name);
     const entry = { name, weeklyTotal: newWeekly, streak: newStreak, treeLabel, treeSrc, lastDate: today };
     if (idx >= 0) {
       players[idx] = entry;
@@ -75,16 +82,11 @@ export default function Dashboard({ userName }) {
     localStorage.setItem('intake', JSON.stringify({ oz: newIntake, date: today }));
     setIntake(newIntake);
 
-    const getWeekStart = () => {
-      const d = new Date();
-      d.setDate(d.getDate() - d.getDay());
-      return d.toLocaleDateString();
-    };
     const newWeekly = weeklyTotal + 8;
     localStorage.setItem('weekly', JSON.stringify({ oz: newWeekly, weekStart: getWeekStart() }));
     setWeeklyTotal(newWeekly);
 
-    const newPct = Math.min(Math.round((newIntake / goal) * 100), 100);
+    const newPct = Math.min(Math.round((newIntake / GOAL_OZ) * 100), 100);
     updatePlayerBoard(userName, streak, newWeekly, newPct);
   }
 
@@ -92,8 +94,8 @@ export default function Dashboard({ userName }) {
     localStorage.removeItem('intake');
     setIntake(0);
 
-    const newStreak = streak + 1;
     const today = new Date().toLocaleDateString();
+    const newStreak = streak + 1;
     localStorage.setItem('streak', JSON.stringify({ days: newStreak, lastDate: today }));
     setStreak(newStreak);
 
@@ -104,54 +106,64 @@ export default function Dashboard({ userName }) {
     if (pct >= 100) {
       const fullyGrown = [
         { src: '/tree with leaves.png', label: 'Tree with Leaves' },
-        { src: '/apple tree.png',       label: 'Apple Tree' },
-        { src: '/orange tree.png',      label: 'Orange Tree' },
-        { src: '/watermelon tree.png',  label: 'Watermelon Tree' },
-        { src: '/Peach tree.png',       label: 'Peach Tree' },
-        { src: '/pineapple tree.png',   label: 'Pineapple Tree' },
-        { src: '/grapes tree.png',      label: 'Grapes Tree' },
-        { src: '/tree of life.png',     label: 'Tree of Life', weekComplete: true },
+        { src: '/apple tree.png', label: 'Apple Tree' },
+        { src: '/orange tree.png', label: 'Orange Tree' },
+        { src: '/watermelon tree.png', label: 'Watermelon Tree' },
+        { src: '/Peach tree.png', label: 'Peach Tree' },
+        { src: '/pineapple tree.png', label: 'Pineapple Tree' },
+        { src: '/grapes tree.png', label: 'Grapes Tree' },
+        { src: '/tree of life.png', label: 'Tree of Life', weekComplete: true },
       ];
       const idx = Math.min(currentStreak, fullyGrown.length - 1);
       return fullyGrown[idx];
     }
-    if (pct >= 75) return { src: '/tree.png',         label: 'Tree' };
+    if (pct >= 75) return { src: '/tree.png', label: 'Tree' };
     if (pct >= 50) return { src: '/more sapling.png', label: 'Growing Sapling' };
-    if (pct >= 25) return { src: '/sapling.png',      label: 'Sapling' };
+    if (pct >= 25) return { src: '/sapling.png', label: 'Sapling' };
     return null;
   }
 
-  const pct = Math.min(Math.round((intake / goal) * 100), 100);
+  const pct = Math.min(Math.round((intake / GOAL_OZ) * 100), 100);
   const treeImage = getTreeImage(pct, streak);
+  const dayLabel = streak === 1 ? 'day' : 'days';
+  const title = userName
+    ? `${userName}'s ${streak} consecutive ${dayLabel}`
+    : `${streak} consecutive ${dayLabel}`;
+  const rankLabel = getRankLabel(pct);
 
   return (
     <main className="container-fluid">
       <div className="text-center my-3">
-        <h2 className="fw-bold">{userName ? `${userName}'s ${streak} consecutive day${streak !== 1 ? 's' : ''}` : `${streak} consecutive day${streak !== 1 ? 's' : ''}`}</h2>
+        <h2 className="fw-bold">{title}</h2>
       </div>
-      <div className="dashboard-grid">
 
-        {/* Left: Progress + Tree */}
+      <div className="dashboard-grid">
         <div>
           <div className="card mb-3">
             <div className="card-body">
               <h5 className="card-title">Today's Progress</h5>
-              <label className="form-label">Hydration Goal ({intake} / {goal} oz)</label>
+              <label className="form-label">
+                Hydration Goal ({intake} / {GOAL_OZ} oz)
+              </label>
               <div className="progress mb-3" style={{ height: '22px' }}>
                 <div
                   className="progress-bar bg-primary"
                   role="progressbar"
-                  style={{ width: `${Math.min((intake / goal) * 100, 100)}%` }}
+                  style={{ width: `${Math.min((intake / GOAL_OZ) * 100, 100)}%` }}
                   aria-valuenow={intake}
                   aria-valuemin="0"
-                  aria-valuemax={goal}
+                  aria-valuemax={GOAL_OZ}
                 >
-                  {Math.min(Math.round((intake / goal) * 100), 100)}%
+                  {pct}%
                 </div>
               </div>
-              <span className="badge bg-success mb-2">🔥 {streak}-Day Streak</span>
-              <button className="btn btn-primary ms-2" onClick={logWater}>+ Log Water Intake</button>
-              <button className="btn btn-secondary ms-2" onClick={newDay}>New Day</button>
+              <span className="badge bg-success mb-2">&#128293; {streak}-Day Streak</span>
+              <button className="btn btn-primary ms-2" onClick={logWater}>
+                + Log Water Intake
+              </button>
+              <button className="btn btn-secondary ms-2" onClick={newDay}>
+                New Day
+              </button>
             </div>
           </div>
 
@@ -159,7 +171,8 @@ export default function Dashboard({ userName }) {
             <div className="card-body">
               <h5 className="card-title">Your Virtual Tree</h5>
               {treeImage
-                ? <>
+                ? (
+                  <>
                     <img src={treeImage.src} alt={treeImage.label} style={{ maxHeight: '180px' }} />
                     {treeImage.weekComplete && (
                       <p className="fw-bold mt-2" style={{ color: '#1a237e' }}>
@@ -167,27 +180,26 @@ export default function Dashboard({ userName }) {
                       </p>
                     )}
                   </>
+                )
                 : <p className="text-muted">Keep drinking! Your tree will appear at 25%.</p>
               }
             </div>
           </div>
         </div>
 
-        {/* Right: Notifications + Stats */}
         <div>
-<div className="card">
+          <div className="card">
             <div className="card-body">
               <h5 className="card-title">Your Stats</h5>
               <ul className="list-unstyled">
-                <li>📅 Current streak: <strong>{streak} day{streak !== 1 ? 's' : ''}</strong></li>
-                <li>💧 Total this week: <strong>{weeklyTotal} oz</strong></li>
-                <li>🌳 Tree level: <strong>{treeImage ? treeImage.label : 'No tree yet'}</strong></li>
-                <li>🏅 Rank: <strong>{pct >= 100 ? 'Hydration Master' : pct >= 75 ? 'Almost There' : pct >= 50 ? 'Halfway Hero' : pct >= 25 ? 'Getting Started' : 'Just Beginning'}</strong></li>
+                <li>&#128221; Current streak: <strong>{streak} {dayLabel}</strong></li>
+                <li>&#128167; Total this week: <strong>{weeklyTotal} oz</strong></li>
+                <li>&#127795; Tree level: <strong>{treeImage ? treeImage.label : 'No tree yet'}</strong></li>
+                <li>&#127941; Rank: <strong>{rankLabel}</strong></li>
               </ul>
             </div>
           </div>
         </div>
-
       </div>
     </main>
   );

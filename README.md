@@ -1,8 +1,8 @@
-# Drinkly
+﻿# Drinkly
 
 [My Notes](docs/notes.md)
 
-## 🚀 Specification Deliverable
+## ðŸš€ Specification Deliverable
 
 <!-- > [!NOTE]
 > Fill in this sections as the submission artifact for this deliverable. You can refer to this [example](https://github.com/webprogramming260/startup-example/blob/main/README.md) for inspiration. -->
@@ -55,10 +55,10 @@ sequenceDiagram
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** – Uses correct HTML structure for application pages including login, profile setup, dashboard, fruit basket, leaderboard, settings, and admin views.
-- **CSS** – Application styling that looks good on different screen sizes, uses good whitespace, color choice, contrast, and includes animations for tree growth and rain effects.
-- **React** – Provides login, water logging, progress display, leaderboard viewing, and routing using React components and React Router.
-- **Service** – Backend service with endpoints for:
+- **HTML** â€“ Uses correct HTML structure for application pages including login, profile setup, dashboard, fruit basket, leaderboard, settings, and admin views.
+- **CSS** â€“ Application styling that looks good on different screen sizes, uses good whitespace, color choice, contrast, and includes animations for tree growth and rain effects.
+- **React** â€“ Provides login, water logging, progress display, leaderboard viewing, and routing using React components and React Router.
+- **Service** â€“ Backend service with endpoints for:
   - register
   - login
   - logout
@@ -66,17 +66,17 @@ I am going to use the required technologies in the following ways.
   - retrieving daily intake totals
   - retrieving leaderboard data
   - managing fruit rewards and tree unlocks
-- **DB/Login** – Stores users, authentication credentials, water logs, streaks, fruit inventory, and unlocked trees in a database. Users must be authenticated to log water.
-- **WebSocket** – As users log water or complete daily goals, leaderboard updates and friend activity are broadcast to all other users in realtime.
-- **Third-party API** – When a user reaches their daily hydration goal, the backend retrieves a motivational quote from the ZenQuotes public API and displays it as a reward.
+- **DB/Login** â€“ Stores users, authentication credentials, water logs, streaks, fruit inventory, and unlocked trees in a database. Users must be authenticated to log water.
+- **WebSocket** â€“ As users log water or complete daily goals, leaderboard updates and friend activity are broadcast to all other users in realtime.
+- **Third-party API** â€“ When a user reaches their daily hydration goal, the backend retrieves a motivational quote from the ZenQuotes public API and displays it as a reward.
 
-## 🚀 AWS deliverable
+## ðŸš€ AWS deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
 - [x] **Server deployed and accessible with custom domain name** - [My server link](https://startup.drink-ly.com).
 
-## 🚀 HTML deliverable
+## ðŸš€ HTML deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
@@ -90,7 +90,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **DB data placeholder** - Leaderboard table with sample user hydration data.
 - [x] **WebSocket placeholder** - Notifications list showing friend activities on dashboard.
 
-## 🚀 CSS deliverable
+## ðŸš€ CSS deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
@@ -101,7 +101,7 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **Use of a imported font** - Nunito imported from Google Fonts and applied via font-family on all pages.
 - [x] **Use of different types of selectors including element, class, ID, and pseudo selectors** - Element selectors (body, header, th, td, blockquote), class selectors (.card, .streak-badge, .welcome-banner), ID selectors (#logWater, #notifications, #treePlaceholder), and pseudo selector (nav a:hover).
 
-## 🚀 React part 1: Routing deliverable
+## ðŸš€ React part 1: Routing deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
@@ -109,14 +109,14 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] **Components** - Created Login, Dashboard, Leaderboard, and About components, each in their own src/ subfolder with associated CSS. App component contains shared header and footer.
 - [x] **Router** - Implemented React Router with BrowserRouter, NavLink, and Routes in app.jsx. Routes defined for /, /dashboard, /leaderboard, and /about.
 
-## 🚀 React part 2: Reactivity deliverable
+## ðŸš€ React part 2: Reactivity deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **All functionality implemented or mocked out** - I did complete this part of the deliverable.
-- [x] **Hooks** - I did complete this part of the deliverable.
+- [x] **All functionality implemented or mocked out** - I used localStorage for login name, streak, intake, and weekly totals. Leaderboard is built from localStorage data, and a fake activity feed is shown using a notifier so it feels live.
+- [x] **Hooks** - useState holds UI state (login name, streak, intake, weekly totals, leaderboard data). useEffect loads saved data on page load and wires up the mock activity listener.
 
-## 🚀 Service deliverable
+## ðŸš€ Service deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
@@ -127,14 +127,14 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [ ] **Frontend calls service endpoints** - I did not complete this part of the deliverable.
 - [ ] **Supports registration, login, logout, and restricted endpoint** - I did not complete this part of the deliverable.
 
-## 🚀 DB deliverable
+## ðŸš€ DB deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
 - [ ] **Stores data in MongoDB** - I did not complete this part of the deliverable.
 - [ ] **Stores credentials in MongoDB** - I did not complete this part of the deliverable.
 
-## 🚀 WebSocket deliverable
+## ðŸš€ WebSocket deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
@@ -143,3 +143,4 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
 - [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
 - [ ] **Application is fully functional** - I did not complete this part of the deliverable.
+
