@@ -1,6 +1,22 @@
+import { useState, useEffect } from 'react';
 import './about.css';
 
 export default function About() {
+  const [quote, setQuote] = useState({ q: 'Water is the driving force of all nature.', a: 'Leonardo da Vinci' });
+
+  useEffect(() => {
+    // This will be replaced with a real ZenQuotes API call
+    // Mock response matches the ZenQuotes API format: [{ q: "quote", a: "author" }]
+    const mockQuotes = [
+      { q: 'Water is the driving force of all nature.', a: 'Leonardo da Vinci' },
+      { q: 'Thousands have lived without love, not one without water.', a: 'W.H. Auden' },
+      { q: 'Pure water is the world\'s first and foremost medicine.', a: 'Slovakian Proverb' },
+      { q: 'In one drop of water are found all the secrets of all the oceans.', a: 'Kahlil Gibran' },
+    ];
+    const random = mockQuotes[Math.floor(Math.random() * mockQuotes.length)];
+    setQuote(random);
+  }, []);
+
   return (
     <main className="container-fluid text-center" style={{ padding: '1rem 2rem' }}>
       <div>
@@ -26,7 +42,7 @@ export default function About() {
         </div>
 
         <div className="quote-box text-start mx-auto mt-4 mb-4" style={{ maxWidth: '500px' }}>
-          <p className="mb-0">"Water is the driving force of all nature." — Placeholder for ZenQuotes API</p>
+          <p className="mb-0">"{quote.q}" — {quote.a}</p>
         </div>
       </div>
     </main>
