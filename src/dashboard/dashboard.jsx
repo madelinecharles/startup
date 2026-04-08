@@ -54,20 +54,13 @@ export default function Dashboard({ userName }) {
 
   function updatePlayerBoard(name, newStreak, newWeekly, newPct) {
     const today = new Date().toLocaleDateString();
-    const treeLabel = (() => {
-      if (newPct >= 100) {
-        const trees = ['Apple Tree', 'Orange Tree', 'Watermelon Tree'];
-        return trees[(newStreak - 1) % trees.length];
-      }
-      if (newPct >= 75) return 'Tree';
-      if (newPct >= 50) return 'Growing Sapling';
-      if (newPct >= 25) return 'Sapling';
-      return 'No tree yet';
-    })();
+    const tree = getTreeImage(newPct, newStreak);
+    const treeLabel = tree ? tree.label : 'No tree yet';
+    const treeSrc = tree ? tree.src : null;
 
     const players = JSON.parse(localStorage.getItem('players') || '[]');
     const idx = players.findIndex(p => p.name === name);
-    const entry = { name, weeklyTotal: newWeekly, streak: newStreak, treeLabel, lastDate: today };
+    const entry = { name, weeklyTotal: newWeekly, streak: newStreak, treeLabel, treeSrc, lastDate: today };
     if (idx >= 0) {
       players[idx] = entry;
     } else {
@@ -110,11 +103,17 @@ export default function Dashboard({ userName }) {
   function getTreeImage(pct, currentStreak) {
     if (pct >= 100) {
       const fullyGrown = [
-        { src: '/apple tree.png',      label: 'Apple Tree' },
-        { src: '/orange tree.png',     label: 'Orange Tree' },
-        { src: '/watermelon tree.png', label: 'Watermelon Tree' },
+        { src: '/tree with leaves.png', label: 'Tree with Leaves' },
+        { src: '/apple tree.png',       label: 'Apple Tree' },
+        { src: '/orange tree.png',      label: 'Orange Tree' },
+        { src: '/watermelon tree.png',  label: 'Watermelon Tree' },
+        { src: '/Peach tree.png',       label: 'Peach Tree' },
+        { src: '/pineapple tree.png',   label: 'Pineapple Tree' },
+        { src: '/grapes tree.png',      label: 'Grapes Tree' },
+        { src: '/tree of life.png',     label: 'Tree of Life', weekComplete: true },
       ];
-      return fullyGrown[(currentStreak - 1) % fullyGrown.length];
+      const idx = Math.min(currentStreak, fullyGrown.length - 1);
+      return fullyGrown[idx];
     }
     if (pct >= 75) return { src: '/tree.png',         label: 'Tree' };
     if (pct >= 50) return { src: '/more sapling.png', label: 'Growing Sapling' };
@@ -160,7 +159,14 @@ export default function Dashboard({ userName }) {
             <div className="card-body">
               <h5 className="card-title">Your Virtual Tree</h5>
               {treeImage
-                ? <img src={treeImage.src} alt={treeImage.label} style={{ maxHeight: '180px' }} />
+                ? <>
+                    <img src={treeImage.src} alt={treeImage.label} style={{ maxHeight: '180px' }} />
+                    {treeImage.weekComplete && (
+                      <p className="fw-bold mt-2" style={{ color: '#1a237e' }}>
+                        You have accomplished a whole week. You have reached the Tree of Life!
+                      </p>
+                    )}
+                  </>
                 : <p className="text-muted">Keep drinking! Your tree will appear at 25%.</p>
               }
             </div>

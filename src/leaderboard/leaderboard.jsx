@@ -39,7 +39,11 @@ export default function Leaderboard() {
           <td>{p.name}</td>
           <td>{p.weeklyTotal} oz</td>
           <td>{p.streak}</td>
-          <td>{p.treeLabel}</td>
+          <td>
+            {p.treeSrc
+              ? <img src={p.treeSrc} alt={p.treeLabel} style={{ height: '40px' }} />
+              : p.treeLabel}
+          </td>
         </tr>
       ))
     : (
