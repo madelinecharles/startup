@@ -21,6 +21,7 @@ export default function Dashboard({ userName }) {
   const [streak, setStreak] = useState(0);
   const [intake, setIntake] = useState(0);
   const [weeklyTotal, setWeeklyTotal] = useState(0);
+  const [temperature, setTemperature] = useState(null);
 
   useEffect(() => {
     const today = new Date().toLocaleDateString();
@@ -57,6 +58,10 @@ export default function Dashboard({ userName }) {
       localStorage.setItem('weekly', JSON.stringify({ oz: 0, weekStart }));
       setWeeklyTotal(0);
     }
+
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=40.25&longitude=111.625&current=temperature_2m&temperature_unit=fahrenheit')
+      .then(res => res.json())
+      .then(data => setTemperature(data.current.temperature_2m));
   }, []);
 
   function updatePlayerBoard(name, newStreak, newWeekly, newPct) {
@@ -135,6 +140,13 @@ export default function Dashboard({ userName }) {
     <main className="container-fluid">
       <div className="text-center my-3">
         <h2 className="fw-bold">{title}</h2>
+        {temperature !== null && (
+          <div className="alert alert-info">
+            {temperature >= 80
+              ? `🌡️ It's ${temperature}°F today — drink extra water!`
+              : `🌤️ It's ${temperature}°F today — stay hydrated!`}
+          </div>
+        )}
       </div>
 
       <div className="dashboard-grid">
