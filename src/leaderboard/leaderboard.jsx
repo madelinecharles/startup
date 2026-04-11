@@ -7,17 +7,13 @@ export default function Leaderboard() {
   const [feed, setFeed] = useState([]);
 
   useEffect(() => {
-    const today = new Date().toLocaleDateString();
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toLocaleDateString();
+    // Fetch leaderboard from backend instead of localStorage
+    fetch('/api/leaderboard')
+      .then(res => res.json())
+      .then(data => setPlayers(data))
+      .catch(() => setPlayers([]));
 
-    const all = JSON.parse(localStorage.getItem('players') || '[]');
-    const active = all.filter((p) => p.lastDate === today || p.lastDate === yesterdayStr);
-    active.sort((a, b) => b.weeklyTotal - a.weeklyTotal);
-    setPlayers(active);
-
-    // Simulated live activity (will be WebSocket later)
+    // Live activity feed (simulated — will be WebSocket later)
     function handleEvent(event) {
       if (event.type === DrinkEvent.Log) {
         setFeed((prev) => {

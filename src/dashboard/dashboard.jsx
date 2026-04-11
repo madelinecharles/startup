@@ -23,88 +23,74 @@ export default function Dashboard({ userName }) {
   const [weeklyTotal, setWeeklyTotal] = useState(0);
   const [temperature, setTemperature] = useState(null);
 
+  // Load user data from backend on mount
   useEffect(() => {
-    const today = new Date().toLocaleDateString();
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yesterdayStr = yesterday.toLocaleDateString();
+    fetch('/api/user/data')
+      .then(res => res.json())
+      .then(data => {
+        const today = new Date().toLocaleDateString();
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yesterdayStr = yesterday.toLocaleDateString();
 
-    // Streak
-    const savedStreak = JSON.parse(localStorage.getItem('streak') || '{"days":0,"lastDate":""}');
-    let nextStreak = 0;
-    if (savedStreak.lastDate === today) {
-      nextStreak = savedStreak.days;
-    } else if (savedStreak.lastDate === yesterdayStr) {
-      nextStreak = savedStreak.days + 1;
-    }
-    localStorage.setItem('streak', JSON.stringify({ days: nextStreak, lastDate: today }));
-    setStreak(nextStreak);
+        // Reset intake if it's a new day
+        const currentIntake = data.lastDate === today ? data.intake : 0;
 
-    // Intake (resets daily)
-    const savedIntake = JSON.parse(localStorage.getItem('intake') || '{"oz":0,"date":""}');
-    if (savedIntake.date === today) {
-      setIntake(savedIntake.oz);
-    } else {
-      localStorage.setItem('intake', JSON.stringify({ oz: 0, date: today }));
-      setIntake(0);
-    }
+        // Reset weekly if it's a new week
+        const currentWeekly = data.weekStart === getWeekStart() ? data.weeklyTotal : 0;
 
-    // Weekly total (resets weekly)
-    const weekStart = getWeekStart();
-    const savedWeekly = JSON.parse(localStorage.getItem('weekly') || '{"oz":0,"weekStart":""}');
-    if (savedWeekly.weekStart === weekStart) {
-      setWeeklyTotal(savedWeekly.oz);
-    } else {
-      localStorage.setItem('weekly', JSON.stringify({ oz: 0, weekStart }));
-      setWeeklyTotal(0);
-    }
+        // Advance streak if last active was yesterday
+        let currentStreak = data.streak || 0;
+        if (data.lastDate === yesterdayStr) {
+          currentStreak = currentStreak + 1;
+        } else if (data.lastDate !== today) {
+          currentStreak = 0;
+        }
 
+        setIntake(currentIntake);
+        setWeeklyTotal(currentWeekly);
+        setStreak(currentStreak);
+      })
+      .catch(() => {
+        // fallback to 0 if not logged in or server error
+      });
+
+    // Third-party weather API
     fetch('https://api.open-meteo.com/v1/forecast?latitude=40.25&longitude=111.625&current=temperature_2m&temperature_unit=fahrenheit')
       .then(res => res.json())
       .then(data => setTemperature(data.current.temperature_2m));
   }, []);
 
-  function updatePlayerBoard(name, newStreak, newWeekly, newPct) {
-    const today = new Date().toLocaleDateString();
-    const tree = getTreeImage(newPct, newStreak);
-    const treeLabel = tree ? tree.label : 'No tree yet';
-    const treeSrc = tree ? tree.src : null;
-
-    const players = JSON.parse(localStorage.getItem('players') || '[]');
-    const idx = players.findIndex((p) => p.name === name);
-    const entry = { name, weeklyTotal: newWeekly, streak: newStreak, treeLabel, treeSrc, lastDate: today };
-    if (idx >= 0) {
-      players[idx] = entry;
-    } else {
-      players.push(entry);
-    }
-    localStorage.setItem('players', JSON.stringify(players));
+  function saveToBackend(newIntake, newWeekly, newStreak) {
+    const tree = getTreeImage(Math.min(Math.round((newIntake / GOAL_OZ) * 100), 100), newStreak);
+    fetch('/api/user/data', {
+      method: 'POST',
+      headers: { 'Content-type': 'application/json; charset=UTF-8' },
+      body: JSON.stringify({
+        streak: newStreak,
+        intake: newIntake,
+        weeklyTotal: newWeekly,
+        lastDate: new Date().toLocaleDateString(),
+        weekStart: getWeekStart(),
+        treeLabel: tree ? tree.label : 'No tree yet',
+        treeSrc: tree ? tree.src : null,
+      }),
+    });
   }
 
   function logWater() {
-    const today = new Date().toLocaleDateString();
     const newIntake = intake + 8;
-    localStorage.setItem('intake', JSON.stringify({ oz: newIntake, date: today }));
-    setIntake(newIntake);
-
     const newWeekly = weeklyTotal + 8;
-    localStorage.setItem('weekly', JSON.stringify({ oz: newWeekly, weekStart: getWeekStart() }));
+    setIntake(newIntake);
     setWeeklyTotal(newWeekly);
-
-    const newPct = Math.min(Math.round((newIntake / GOAL_OZ) * 100), 100);
-    updatePlayerBoard(userName, streak, newWeekly, newPct);
+    saveToBackend(newIntake, newWeekly, streak);
   }
 
   function newDay() {
-    localStorage.removeItem('intake');
-    setIntake(0);
-
-    const today = new Date().toLocaleDateString();
     const newStreak = streak + 1;
-    localStorage.setItem('streak', JSON.stringify({ days: newStreak, lastDate: today }));
+    setIntake(0);
     setStreak(newStreak);
-
-    updatePlayerBoard(userName, newStreak, weeklyTotal, 0);
+    saveToBackend(0, weeklyTotal, newStreak);
   }
 
   function getTreeImage(pct, currentStreak) {
@@ -132,7 +118,7 @@ export default function Dashboard({ userName }) {
   const treeImage = getTreeImage(pct, streak);
   const dayLabel = streak === 1 ? 'day' : 'days';
   const title = userName
-    ? `${userName}'s ${streak} consecutive ${dayLabel}`
+    ? `${userName.split('@')[0]}'s ${streak} consecutive ${dayLabel}`
     : `${streak} consecutive ${dayLabel}`;
   const rankLabel = getRankLabel(pct);
 
