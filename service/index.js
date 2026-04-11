@@ -8,7 +8,7 @@ const authCookieName = 'token';
 
 // In-memory storage (resets on server restart — replace with a database later)
 let users = [];
-let playerData = {}; // keyed by email: { streak, intake, weeklyTotal, lastDate, weekStart }
+let playerData = {}; // keyed by name: { streak, intake, weeklyTotal, lastDate, weekStart }
 
 const port = process.argv.length > 2 ? process.argv[2] : 3000;
 
@@ -25,24 +25,24 @@ app.use('/api', apiRouter);
 
 // Create a new account
 apiRouter.post('/auth/create', async (req, res) => {
-  if (await findUser('email', req.body.email)) {
-    res.status(409).send({ msg: 'Email already in use' });
+  if (await findUser('name', req.body.name)) {
+    res.status(409).send({ msg: 'Name already taken' });
   } else {
-    const user = await createUser(req.body.email, req.body.password);
+    const user = await createUser(req.body.name, req.body.password);
     setAuthCookie(res, user.token);
-    res.send({ email: user.email });
+    res.send({ name: user.name });
   }
 });
 
 // Login with existing account
 apiRouter.post('/auth/login', async (req, res) => {
-  const user = await findUser('email', req.body.email);
+  const user = await findUser('name', req.body.name);
   if (user && (await bcrypt.compare(req.body.password, user.password))) {
     user.token = uuid.v4();
     setAuthCookie(res, user.token);
-    res.send({ email: user.email });
+    res.send({ name: user.name });
   } else {
-    res.status(401).send({ msg: 'Invalid email or password' });
+    res.status(401).send({ msg: 'Invalid name or password' });
   }
 });
 
@@ -72,14 +72,14 @@ const verifyAuth = async (req, res, next) => {
 
 // Get the logged-in user's hydration data
 apiRouter.get('/user/data', verifyAuth, (req, res) => {
-  const data = playerData[req.user.email] || defaultData();
+  const data = playerData[req.user.name] || defaultData();
   res.send(data);
 });
 
 // Save the logged-in user's hydration data
 apiRouter.post('/user/data', verifyAuth, (req, res) => {
-  playerData[req.user.email] = req.body;
-  res.send(playerData[req.user.email]);
+  playerData[req.user.name] = req.body;
+  res.send(playerData[req.user.name]);
 });
 
 // ─── Leaderboard ─────────────────────────────────────────────────────────────
@@ -93,7 +93,7 @@ apiRouter.get('/leaderboard', verifyAuth, (_req, res) => {
 
   const active = Object.entries(playerData)
     .filter(([, d]) => d.lastDate === today || d.lastDate === yesterdayStr)
-    .map(([email, d]) => ({ name: email.split('@')[0], ...d }))
+    .map(([name, d]) => ({ name, ...d }))
     .sort((a, b) => b.weeklyTotal - a.weeklyTotal);
 
   res.send(active);
@@ -131,9 +131,9 @@ function getWeekStart() {
   return d.toLocaleDateString();
 }
 
-async function createUser(email, password) {
+async function createUser(name, password) {
   const passwordHash = await bcrypt.hash(password, 10);
-  const user = { email, password: passwordHash, token: uuid.v4() };
+  const user = { name, password: passwordHash, token: uuid.v4() };
   users.push(user);
   return user;
 }
