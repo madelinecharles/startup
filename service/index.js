@@ -1,0 +1,157 @@
+const cookieParser = require('cookie-parser');
+const bcrypt = require('bcryptjs');
+const express = require('express');
+const uuid = require('uuid');
+const app = express();
+
+const authCookieName = 'token';
+
+// In-memory storage (resets on server restart — replace with a database later)
+let users = [];
+let playerData = {}; // keyed by email: { streak, intake, weeklyTotal, lastDate, weekStart }
+
+const port = process.argv.length > 2 ? process.argv[2] : 3000;
+
+app.use(express.json());
+app.use(cookieParser());
+
+// Serve the built frontend from the public folder
+app.use(express.static('public'));
+
+const apiRouter = express.Router();
+app.use('/api', apiRouter);
+
+// ─── Auth ────────────────────────────────────────────────────────────────────
+
+// Create a new account
+apiRouter.post('/auth/create', async (req, res) => {
+  if (await findUser('email', req.body.email)) {
+    res.status(409).send({ msg: 'Email already in use' });
+  } else {
+    const user = await createUser(req.body.email, req.body.password);
+    setAuthCookie(res, user.token);
+    res.send({ email: user.email });
+  }
+});
+
+// Login with existing account
+apiRouter.post('/auth/login', async (req, res) => {
+  const user = await findUser('email', req.body.email);
+  if (user && (await bcrypt.compare(req.body.password, user.password))) {
+    user.token = uuid.v4();
+    setAuthCookie(res, user.token);
+    res.send({ email: user.email });
+  } else {
+    res.status(401).send({ msg: 'Invalid email or password' });
+  }
+});
+
+// Logout
+apiRouter.delete('/auth/logout', async (req, res) => {
+  const user = await findUser('token', req.cookies[authCookieName]);
+  if (user) {
+    delete user.token;
+  }
+  res.clearCookie(authCookieName);
+  res.status(204).end();
+});
+
+// ─── Auth middleware ──────────────────────────────────────────────────────────
+
+const verifyAuth = async (req, res, next) => {
+  const user = await findUser('token', req.cookies[authCookieName]);
+  if (user) {
+    req.user = user;
+    next();
+  } else {
+    res.status(401).send({ msg: 'Unauthorized' });
+  }
+};
+
+// ─── User drink data ──────────────────────────────────────────────────────────
+
+// Get the logged-in user's hydration data
+apiRouter.get('/user/data', verifyAuth, (req, res) => {
+  const data = playerData[req.user.email] || defaultData();
+  res.send(data);
+});
+
+// Save the logged-in user's hydration data
+apiRouter.post('/user/data', verifyAuth, (req, res) => {
+  playerData[req.user.email] = req.body;
+  res.send(playerData[req.user.email]);
+});
+
+// ─── Leaderboard ─────────────────────────────────────────────────────────────
+
+// Get all active players for the leaderboard
+apiRouter.get('/leaderboard', verifyAuth, (_req, res) => {
+  const today = new Date().toLocaleDateString();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toLocaleDateString();
+
+  const active = Object.entries(playerData)
+    .filter(([, d]) => d.lastDate === today || d.lastDate === yesterdayStr)
+    .map(([email, d]) => ({ name: email.split('@')[0], ...d }))
+    .sort((a, b) => b.weeklyTotal - a.weeklyTotal);
+
+  res.send(active);
+});
+
+// ─── Error handler ────────────────────────────────────────────────────────────
+
+app.use(function (err, _req, res, _next) {
+  res.status(500).send({ type: err.name, message: err.message });
+});
+
+// Serve React app for any unknown path (so React Router works)
+app.use((_req, res) => {
+  res.sendFile('index.html', { root: 'public' });
+});
+
+// ─── Helpers ──────────────────────────────────────────────────────────────────
+
+function defaultData() {
+  const today = new Date().toLocaleDateString();
+  return {
+    streak: 0,
+    intake: 0,
+    weeklyTotal: 0,
+    lastDate: today,
+    weekStart: getWeekStart(),
+    treeLabel: 'No tree yet',
+    treeSrc: null,
+  };
+}
+
+function getWeekStart() {
+  const d = new Date();
+  d.setDate(d.getDate() - d.getDay());
+  return d.toLocaleDateString();
+}
+
+async function createUser(email, password) {
+  const passwordHash = await bcrypt.hash(password, 10);
+  const user = { email, password: passwordHash, token: uuid.v4() };
+  users.push(user);
+  return user;
+}
+
+async function findUser(field, value) {
+  if (!value) return null;
+  return users.find((u) => u[field] === value);
+}
+
+function setAuthCookie(res, authToken) {
+  res.cookie(authCookieName, authToken, {
+    maxAge: 1000 * 60 * 60 * 24 * 365,
+    secure: true,
+    httpOnly: true,
+    sameSite: 'strict',
+  });
+}
+
+app.listen(port, () => {
+  console.log(`Drinkly service listening on port ${port}`);
+});

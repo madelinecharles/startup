@@ -1,0 +1,17 @@
+{
+  "name": "drinkly-service",
+  "version": "1.0.0",
+  "description": "Backend service for Drinkly hydration tracking app.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cookie-parser": "^1.4.7",
+    "express": "^5.2.1",
+    "uuid": "^11.0.5"
+  }
+}
