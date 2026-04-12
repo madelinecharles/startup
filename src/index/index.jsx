@@ -8,17 +8,22 @@ function Unauthenticated({ onLogin }) {
   const [errorMsg, setErrorMsg] = useState('');
 
   async function loginOrCreate(endpoint) {
-    const response = await fetch(endpoint, {
-      method: 'POST',
-      body: JSON.stringify({ name, password }),
-      headers: { 'Content-type': 'application/json; charset=UTF-8' },
-    });
+    try {
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        body: JSON.stringify({ name, password }),
+        headers: { 'Content-type': 'application/json; charset=UTF-8' },
+      });
 
-    if (response.ok) {
-      onLogin(name);
-    } else {
-      const body = await response.json();
-      setErrorMsg(`Warning: ${body.msg}`);
+      if (response.ok) {
+        onLogin(name);
+        return;
+      }
+
+      const body = await response.json().catch(() => ({}));
+      setErrorMsg(`Warning: ${body.msg || 'Something went wrong. Please try again.'}`);
+    } catch {
+      setErrorMsg('Warning: Could not reach the server.');
     }
   }
 
