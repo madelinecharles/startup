@@ -2,14 +2,20 @@ import { useEffect, useState } from 'react';
 import { DrinkEvent, DrinkNotifier } from './drinkNotifier';
 import './leaderboard.css';
 
-export default function Leaderboard() {
+export default function Leaderboard({ onLogout }) {
   const [players, setPlayers] = useState([]);
   const [feed, setFeed] = useState([]);
 
   useEffect(() => {
     // Fetch leaderboard from backend instead of localStorage
     fetch('/api/leaderboard')
-      .then(res => res.json())
+      .then(async res => {
+        if (res.status === 401) {
+          onLogout?.();
+          throw new Error('Unauthorized');
+        }
+        return await res.json();
+      })
       .then(data => setPlayers(data))
       .catch(() => setPlayers([]));
 

@@ -4,26 +4,22 @@
 
 ## Service Deliverable
 
-- The project follows the Simon service layout with a separate `service/` folder and its own `package.json`.
-- `service/index.js` uses Node.js and Express, serves the built frontend with `express.static('public')`, and exposes backend endpoints under `/api`.
-- Auth endpoints are:
-  - `POST /api/auth/create`
-  - `POST /api/auth/login`
-  - `DELETE /api/auth/logout`
-  - `GET /api/auth/me`
-- Protected application endpoints are:
-  - `GET /api/user/data`
-  - `POST /api/user/data`
-  - `GET /api/leaderboard`
-- Passwords are hashed with `bcryptjs` before storage.
-- Vite proxies `/api` requests to `http://localhost:4000` during local development.
-- The frontend calls a third-party weather API from the dashboard using Open-Meteo.
-- One important local-dev detail: auth cookies should only be marked `secure` in production, otherwise login can fail over plain `http://localhost`.
+For the service part I used Simon Service as the example for how to organize the project.
 
-## What To Remember
+- I kept a separate `service` folder with its own `package.json`.
+- I used Node.js and Express in `service/index.js`.
+- I used `express.static('public')` so the backend can serve the frontend.
+- I added auth endpoints for create account, login, logout, and checking the current user.
+- I added protected endpoints for hydration data and the leaderboard.
+- I used `bcryptjs` to hash passwords.
+- I used the Vite proxy so `/api` requests go to port `4000`.
+- I used a third-party API from the frontend by calling Open-Meteo on the dashboard.
 
-- Run `npm install` in the repo root for the frontend.
-- Run `npm install` in `service/` for the backend.
-- Start the frontend with `npm run dev`.
-- Start the backend with `node index.js` from `service/`.
-- `deployService.sh` packages `dist/` as `public/` and deploys the backend service alongside it.
+One thing I learned is that secure cookies should only be forced in production. If they are always secure, login on `http://localhost` can fail.
+
+## Run Notes
+
+- Run `npm install` in the root folder.
+- Run `npm install` in the `service` folder.
+- Run `npm run dev` for the frontend.
+- Run `node index.js` inside `service` for the backend.

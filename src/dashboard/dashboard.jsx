@@ -17,7 +17,7 @@ function getRankLabel(pct) {
   return 'Just Beginning';
 }
 
-export default function Dashboard({ userName }) {
+export default function Dashboard({ userName, onLogout }) {
   const [streak, setStreak] = useState(0);
   const [intake, setIntake] = useState(0);
   const [weeklyTotal, setWeeklyTotal] = useState(0);
@@ -26,7 +26,13 @@ export default function Dashboard({ userName }) {
   // Load user data from backend on mount
   useEffect(() => {
     fetch('/api/user/data')
-      .then(res => res.json())
+      .then(async res => {
+        if (res.status === 401) {
+          onLogout?.();
+          throw new Error('Unauthorized');
+        }
+        return await res.json();
+      })
       .then(data => {
         const today = new Date().toLocaleDateString();
         const yesterday = new Date();
@@ -75,6 +81,10 @@ export default function Dashboard({ userName }) {
         treeLabel: tree ? tree.label : 'No tree yet',
         treeSrc: tree ? tree.src : null,
       }),
+    }).then(res => {
+      if (res.status === 401) {
+        onLogout?.();
+      }
     });
   }
 
