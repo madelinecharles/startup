@@ -13,12 +13,13 @@ function Unauthenticated({ onLogin }) {
       body: JSON.stringify({ name, password }),
       headers: { 'Content-type': 'application/json; charset=UTF-8' },
     });
+
     if (response.ok) {
       localStorage.setItem('userName', name);
       onLogin(name);
     } else {
       const body = await response.json();
-      setErrorMsg(`⚠ Error: ${body.msg}`);
+      setErrorMsg(`Warning: ${body.msg}`);
     }
   }
 
@@ -26,7 +27,7 @@ function Unauthenticated({ onLogin }) {
     <div className="login-wrapper">
       <div className="login-card">
         <h1 className="text-center fw-bold mb-2" style={{ color: '#1a237e' }}>
-          💧 Welcome to Drinkly
+          &#128167; Welcome to Drinkly
         </h1>
 
         <p className="text-center text-muted mb-4">
@@ -34,23 +35,23 @@ function Unauthenticated({ onLogin }) {
         </p>
 
         <div className="input-group mb-3">
-          <span className="input-group-text">👤</span>
+          <span className="input-group-text">&#128100;</span>
           <input
             className="form-control"
             type="text"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={e => setName(e.target.value)}
             placeholder="Your name"
           />
         </div>
 
         <div className="input-group mb-3">
-          <span className="input-group-text">🔒</span>
+          <span className="input-group-text">&#128274;</span>
           <input
             className="form-control"
             type="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
             placeholder="Password"
           />
         </div>
@@ -93,7 +94,7 @@ function Authenticated({ userName, onLogout }) {
     <div className="login-wrapper">
       <div className="login-card text-center">
         <h2 className="fw-bold mb-3" style={{ color: '#1a237e' }}>
-          Welcome back, {userName}! 💧
+          Welcome back, {userName}! &#128167;
         </h2>
         <div className="login-buttons">
           <button className="btn-primary-custom" onClick={() => navigate('/dashboard')}>
@@ -113,8 +114,7 @@ export default function Login({ userName, onLogin, onLogout }) {
     <main className="container-fluid">
       {userName
         ? <Authenticated userName={userName} onLogout={onLogout} />
-        : <Unauthenticated onLogin={onLogin} />
-      }
+        : <Unauthenticated onLogin={onLogin} />}
     </main>
   );
 }

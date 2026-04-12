@@ -1,4 +1,4 @@
-﻿import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './app.css';
 
 import { useEffect, useState } from 'react';
@@ -38,7 +38,9 @@ function Footer() {
     <footer className="bg-primary text-white">
       <div className="container-fluid d-flex justify-content-between">
         <span className="text-reset">Madeline Xu</span>
-        <a className="text-reset" href="https://github.com/xumadeline/startup" target="_blank">GitHub</a>
+        <a className="text-reset" href="https://github.com/xumadeline/startup" target="_blank" rel="noreferrer">
+          GitHub
+        </a>
       </div>
     </footer>
   );
@@ -64,9 +66,7 @@ export default function App() {
         const body = await response.json();
         localStorage.setItem('userName', body.name);
         setUserName(body.name);
-      } catch {
-        // Leave the app usable even when the backend is offline.
-      }
+      } catch {}
     }
 
     hydrateSession();
@@ -89,7 +89,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div className='body' style={{ backgroundColor: '#e3f2fd', color: '#1a237e', minHeight: '100vh' }}>
+      <div className="body" style={{ backgroundColor: '#e3f2fd', color: '#1a237e', minHeight: '100vh' }}>
         <Header userName={userName} onLogout={onLogout} />
         <main className="container-fluid">
           <Routes>
@@ -118,4 +118,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-

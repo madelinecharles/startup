@@ -4,9 +4,9 @@ import './dashboard.css';
 const GOAL_OZ = 100;
 
 function getWeekStart() {
-  const d = new Date();
-  d.setDate(d.getDate() - d.getDay());
-  return d.toLocaleDateString();
+  const date = new Date();
+  date.setDate(date.getDate() - date.getDay());
+  return date.toLocaleDateString();
 }
 
 function getRankLabel(pct) {
@@ -17,13 +17,34 @@ function getRankLabel(pct) {
   return 'Just Beginning';
 }
 
+function getTreeImage(pct, currentStreak) {
+  if (pct >= 100) {
+    const fullyGrown = [
+      { src: '/tree with leaves.png', label: 'Tree with Leaves' },
+      { src: '/apple tree.png', label: 'Apple Tree' },
+      { src: '/orange tree.png', label: 'Orange Tree' },
+      { src: '/watermelon tree.png', label: 'Watermelon Tree' },
+      { src: '/Peach tree.png', label: 'Peach Tree' },
+      { src: '/pineapple tree.png', label: 'Pineapple Tree' },
+      { src: '/grapes tree.png', label: 'Grapes Tree' },
+      { src: '/tree of life.png', label: 'Tree of Life', weekComplete: true },
+    ];
+    const index = Math.min(currentStreak, fullyGrown.length - 1);
+    return fullyGrown[index];
+  }
+
+  if (pct >= 75) return { src: '/tree.png', label: 'Tree' };
+  if (pct >= 50) return { src: '/more sapling.png', label: 'Growing Sapling' };
+  if (pct >= 25) return { src: '/sapling.png', label: 'Sapling' };
+  return null;
+}
+
 export default function Dashboard({ userName, onLogout }) {
   const [streak, setStreak] = useState(0);
   const [intake, setIntake] = useState(0);
   const [weeklyTotal, setWeeklyTotal] = useState(0);
   const [temperature, setTemperature] = useState(null);
 
-  // Load user data from backend on mount
   useEffect(() => {
     fetch('/api/user/data')
       .then(async res => {
@@ -39,16 +60,12 @@ export default function Dashboard({ userName, onLogout }) {
         yesterday.setDate(yesterday.getDate() - 1);
         const yesterdayStr = yesterday.toLocaleDateString();
 
-        // Reset intake if it's a new day
         const currentIntake = data.lastDate === today ? data.intake : 0;
-
-        // Reset weekly if it's a new week
         const currentWeekly = data.weekStart === getWeekStart() ? data.weeklyTotal : 0;
 
-        // Advance streak if last active was yesterday
         let currentStreak = data.streak || 0;
         if (data.lastDate === yesterdayStr) {
-          currentStreak = currentStreak + 1;
+          currentStreak += 1;
         } else if (data.lastDate !== today) {
           currentStreak = 0;
         }
@@ -57,15 +74,12 @@ export default function Dashboard({ userName, onLogout }) {
         setWeeklyTotal(currentWeekly);
         setStreak(currentStreak);
       })
-      .catch(() => {
-        // fallback to 0 if not logged in or server error
-      });
+      .catch(() => {});
 
-    // Third-party weather API
     fetch('https://api.open-meteo.com/v1/forecast?latitude=40.25&longitude=111.625&current=temperature_2m&temperature_unit=fahrenheit')
       .then(res => res.json())
       .then(data => setTemperature(data.current.temperature_2m));
-  }, []);
+  }, [onLogout]);
 
   function saveToBackend(newIntake, newWeekly, newStreak) {
     const tree = getTreeImage(Math.min(Math.round((newIntake / GOAL_OZ) * 100), 100), newStreak);
@@ -103,27 +117,6 @@ export default function Dashboard({ userName, onLogout }) {
     saveToBackend(0, weeklyTotal, newStreak);
   }
 
-  function getTreeImage(pct, currentStreak) {
-    if (pct >= 100) {
-      const fullyGrown = [
-        { src: '/tree with leaves.png', label: 'Tree with Leaves' },
-        { src: '/apple tree.png', label: 'Apple Tree' },
-        { src: '/orange tree.png', label: 'Orange Tree' },
-        { src: '/watermelon tree.png', label: 'Watermelon Tree' },
-        { src: '/Peach tree.png', label: 'Peach Tree' },
-        { src: '/pineapple tree.png', label: 'Pineapple Tree' },
-        { src: '/grapes tree.png', label: 'Grapes Tree' },
-        { src: '/tree of life.png', label: 'Tree of Life', weekComplete: true },
-      ];
-      const idx = Math.min(currentStreak, fullyGrown.length - 1);
-      return fullyGrown[idx];
-    }
-    if (pct >= 75) return { src: '/tree.png', label: 'Tree' };
-    if (pct >= 50) return { src: '/more sapling.png', label: 'Growing Sapling' };
-    if (pct >= 25) return { src: '/sapling.png', label: 'Sapling' };
-    return null;
-  }
-
   const pct = Math.min(Math.round((intake / GOAL_OZ) * 100), 100);
   const treeImage = getTreeImage(pct, streak);
   const dayLabel = streak === 1 ? 'day' : 'days';
@@ -138,9 +131,11 @@ export default function Dashboard({ userName, onLogout }) {
         <h2 className="fw-bold">{title}</h2>
         {temperature !== null && (
           <div className="alert alert-info">
-            {temperature >= 80
-              ? `🌡️ It's ${temperature}°F today — drink extra water!`
-              : `🌤️ It's ${temperature}°F today — stay hydrated!`}
+            {temperature >= 80 ? (
+              <span>&#127777; It's {temperature}F today, so drink extra water!</span>
+            ) : (
+              <span>&#127780; It's {temperature}F today, so stay hydrated!</span>
+            )}
           </div>
         )}
       </div>
@@ -178,19 +173,18 @@ export default function Dashboard({ userName, onLogout }) {
           <div className="card">
             <div className="card-body">
               <h5 className="card-title">Your Virtual Tree</h5>
-              {treeImage
-                ? (
-                  <>
-                    <img src={treeImage.src} alt={treeImage.label} style={{ maxHeight: '180px' }} />
-                    {treeImage.weekComplete && (
-                      <p className="fw-bold mt-2" style={{ color: '#1a237e' }}>
-                        You have accomplished a whole week. You have reached the Tree of Life!
-                      </p>
-                    )}
-                  </>
-                )
-                : <p className="text-muted">Keep drinking! Your tree will appear at 25%.</p>
-              }
+              {treeImage ? (
+                <>
+                  <img src={treeImage.src} alt={treeImage.label} style={{ maxHeight: '180px' }} />
+                  {treeImage.weekComplete && (
+                    <p className="fw-bold mt-2" style={{ color: '#1a237e' }}>
+                      You have accomplished a whole week. You have reached the Tree of Life!
+                    </p>
+                  )}
+                </>
+              ) : (
+                <p className="text-muted">Keep drinking! Your tree will appear at 25%.</p>
+              )}
             </div>
           </div>
         </div>

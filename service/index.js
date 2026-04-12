@@ -2,28 +2,22 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const express = require('express');
 const uuid = require('uuid');
-const app = express();
 
+const app = express();
 const authCookieName = 'token';
 
-// In-memory storage (resets on server restart — replace with a database later)
 let users = [];
-let playerData = {}; // keyed by name: { streak, intake, weeklyTotal, lastDate, weekStart }
+let playerData = {};
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
 app.use(express.json());
 app.use(cookieParser());
-
-// Serve the built frontend from the public folder
 app.use(express.static('public'));
 
 const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
-// ─── Auth ────────────────────────────────────────────────────────────────────
-
-// Create a new account
 apiRouter.post('/auth/create', async (req, res) => {
   if (await findUser('name', req.body.name)) {
     res.status(409).send({ msg: 'Name already taken' });
@@ -34,7 +28,6 @@ apiRouter.post('/auth/create', async (req, res) => {
   }
 });
 
-// Login with existing account
 apiRouter.post('/auth/login', async (req, res) => {
   const user = await findUser('name', req.body.name);
   if (user && (await bcrypt.compare(req.body.password, user.password))) {
@@ -46,7 +39,6 @@ apiRouter.post('/auth/login', async (req, res) => {
   }
 });
 
-// Logout
 apiRouter.delete('/auth/logout', async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
   if (user) {
@@ -56,11 +48,9 @@ apiRouter.delete('/auth/logout', async (req, res) => {
   res.status(204).end();
 });
 
-apiRouter.get('/auth/me', verifyAuth, async (req, res) => {
+apiRouter.get('/auth/me', verifyAuth, (req, res) => {
   res.send({ name: req.user.name });
 });
-
-// ─── Auth middleware ──────────────────────────────────────────────────────────
 
 const verifyAuth = async (req, res, next) => {
   const user = await findUser('token', req.cookies[authCookieName]);
@@ -72,23 +62,16 @@ const verifyAuth = async (req, res, next) => {
   }
 };
 
-// ─── User drink data ──────────────────────────────────────────────────────────
-
-// Get the logged-in user's hydration data
 apiRouter.get('/user/data', verifyAuth, (req, res) => {
   const data = playerData[req.user.name] || defaultData();
   res.send(data);
 });
 
-// Save the logged-in user's hydration data
 apiRouter.post('/user/data', verifyAuth, (req, res) => {
   playerData[req.user.name] = req.body;
   res.send(playerData[req.user.name]);
 });
 
-// ─── Leaderboard ─────────────────────────────────────────────────────────────
-
-// Get all active players for the leaderboard
 apiRouter.get('/leaderboard', verifyAuth, (_req, res) => {
   const today = new Date().toLocaleDateString();
   const yesterday = new Date();
@@ -96,25 +79,20 @@ apiRouter.get('/leaderboard', verifyAuth, (_req, res) => {
   const yesterdayStr = yesterday.toLocaleDateString();
 
   const active = Object.entries(playerData)
-    .filter(([, d]) => d.lastDate === today || d.lastDate === yesterdayStr)
-    .map(([name, d]) => ({ name, ...d }))
+    .filter(([, data]) => data.lastDate === today || data.lastDate === yesterdayStr)
+    .map(([name, data]) => ({ name, ...data }))
     .sort((a, b) => b.weeklyTotal - a.weeklyTotal);
 
   res.send(active);
 });
 
-// ─── Error handler ────────────────────────────────────────────────────────────
-
 app.use(function (err, _req, res, _next) {
   res.status(500).send({ type: err.name, message: err.message });
 });
 
-// Serve React app for any unknown path (so React Router works)
 app.use((_req, res) => {
   res.sendFile('index.html', { root: 'public' });
 });
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
 
 function defaultData() {
   const today = new Date().toLocaleDateString();
@@ -130,9 +108,9 @@ function defaultData() {
 }
 
 function getWeekStart() {
-  const d = new Date();
-  d.setDate(d.getDate() - d.getDay());
-  return d.toLocaleDateString();
+  const date = new Date();
+  date.setDate(date.getDate() - date.getDay());
+  return date.toLocaleDateString();
 }
 
 async function createUser(name, password) {
@@ -144,7 +122,7 @@ async function createUser(name, password) {
 
 async function findUser(field, value) {
   if (!value) return null;
-  return users.find((u) => u[field] === value);
+  return users.find(user => user[field] === value);
 }
 
 function setAuthCookie(res, authToken) {

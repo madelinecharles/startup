@@ -2,7 +2,13 @@
 
 [My Notes](notes.md)
 
+Drinkly is a simple hydration tracker where users log water, build streaks, grow a virtual tree, and compare progress on a leaderboard.
+
+I used the Simon projects as the baseline example for how to organize the app and how to describe each deliverable. The goal was to keep the same overall structure, but adapt it to my own startup idea.
+
 ## &#128640; Specification Deliverable
+
+Drinkly helps users keep track of water intake in a way that feels more like a game. As users drink more water they increase their streak, improve their stats, and grow a tree on the dashboard.
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
@@ -10,11 +16,11 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 - [x] A concise and compelling elevator pitch
 - [x] Description of key features
 - [x] Description of how you will use each technology
-- [x] One or more rough sketches of your application. Images are embedded in this file using Markdown image references.
+- [x] One or more rough sketches of your application. Images must be embedded in this file using Markdown image references.
 
 ### Elevator pitch
 
-Drinkly is a hydration tracker that turns drinking water into a simple daily game. Users log water, build streaks, grow a virtual tree, and compare progress on a leaderboard.
+Staying hydrated is important, but easy to forget. Drinkly makes it more fun by turning water tracking into a daily streak game with progress, rewards, and a leaderboard.
 
 ### Design
 
@@ -23,42 +29,34 @@ Drinkly is a hydration tracker that turns drinking water into a simple daily gam
 ```mermaid
 sequenceDiagram
     actor User
-    participant Frontend
-    participant Service
-    participant ThirdParty
-
-    User->>Frontend: Login
-    Frontend->>Service: /api/auth/login
-    Service-->>Frontend: auth cookie
-    User->>Frontend: Log water
-    Frontend->>Service: /api/user/data
-    Service-->>Frontend: updated hydration data
-    Frontend->>Service: /api/leaderboard
-    Service-->>Frontend: leaderboard data
-    Frontend->>ThirdParty: weather request
-    ThirdParty-->>Frontend: weather data
+    User->>Login: Enter login information
+    Login->>Dashboard: Open hydration dashboard
+    Dashboard->>Dashboard: Log water and view progress
+    Dashboard->>Leaderboard: Check weekly rankings
+    Dashboard->>About: Read about the app
+    Dashboard->>Weather: Get current weather reminder
+    Dashboard-->>Login: Logout
 ```
 
 ### Key features
 
-- Register, login, and logout
-- Log daily water intake
-- Track streaks and weekly totals
-- Show a virtual tree based on progress
-- View a hydration leaderboard
-- Show a weather reminder from a third-party API
+- Login, logout, and register
+- Log water intake
+- See hydration progress and streaks
+- View a leaderboard
+- See a weather reminder
+- Read about the app
 
 ### Technologies
 
 I am going to use the required technologies in the following ways.
 
-- **HTML** - Pages for login, dashboard, leaderboard, and about.
-- **CSS** - Styling for layout, colors, spacing, and responsive design.
-- **React** - Single page app with components, routing, and state.
-- **Service** - Endpoints for register, login, logout, saving hydration data, loading hydration data, and getting the leaderboard.
+- **HTML** - Four different views, login/register controls, dashboard, leaderboard, and about.
+- **CSS** - Blue color scheme, responsive layout, and styling for cards, buttons, and progress bars.
+- **React** - Single page application with routing between views, reactive user controls, and state hooks.
+- **Service** - Endpoints for authentication, saving hydration data, loading hydration data, and getting leaderboard data. Third party call for weather.
 - **DB/Login** - Stores users and hydration data. Passwords are hashed and protected endpoints require authentication.
-- **WebSocket** - Friend activity is mocked for now and will later be replaced by live updates.
-- **Third-party API** - The dashboard calls the Open-Meteo API and shows the current weather with a hydration reminder.
+- **WebSocket** - Friend activity is mocked right now and will later be replaced by live updates.
 
 ## &#128640; AWS deliverable
 
@@ -70,53 +68,53 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **HTML pages** - Four HTML pages: `index.html`, `dashboard.html`, `leaderboard.html`, and `about.html`.
-- [x] **Proper HTML element usage** - Used semantic elements like `header`, `nav`, `main`, `footer`, `form`, `input`, `button`, and `table`.
-- [x] **Links** - Added navigation links between pages.
-- [x] **Text** - Added descriptive text on each page.
+- [x] **HTML pages** - Four different pages. One for each main view.
+- [x] **Proper HTML element usage** - I used header, footer, main, nav, form, input, button, table, and image elements.
+- [x] **Links** - Links between views.
+- [x] **Text** - About page has text describing the app.
 - [x] **3rd party API placeholder** - Added a placeholder area for outside data.
 - [x] **Images** - Added images and placeholders for the hydration tree.
-- [x] **Login placeholder** - Added login inputs and buttons.
-- [x] **DB data placeholder** - Added placeholder leaderboard data.
+- [x] **Login placeholder** - Placeholder for auth on the login page.
+- [x] **DB data placeholder** - Leaderboard data displayed on the leaderboard page.
 - [x] **WebSocket placeholder** - Added placeholder friend activity.
 
 ## &#128640; CSS deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Visually appealing colors and layout. No overflowing elements.** - Used a blue theme and responsive layout.
-- [x] **Use of a CSS framework** - Used Bootstrap for layout and components.
-- [x] **All visual elements styled using CSS** - Styled navigation, cards, buttons, tables, and forms.
-- [x] **Responsive to window resizing using flexbox and/or grid display** - Used flexbox, grid, and media queries.
-- [x] **Use of a imported font** - Used a Google font.
-- [x] **Use of different types of selectors including element, class, ID, and pseudo selectors** - Used several selector types in the CSS files.
+- [x] **Header, footer, and main content body** - I styled the shared layout so it feels like one app.
+- [x] **Navigation elements** - I used Bootstrap navigation and custom styles.
+- [x] **Responsive to window resizing** - I used flexbox, grid, and media queries.
+- [x] **Application elements** - I styled cards, forms, buttons, tables, and progress bars.
+- [x] **Application text content** - I used a Google font and kept the text readable.
+- [x] **Application images** - I added styling for the tree and dashboard images.
 
 ## &#128640; React part 1: Routing deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Bundled using Vite** - Configured Vite for local development and builds.
-- [x] **Components** - Created React components for Login, Dashboard, Leaderboard, and About.
-- [x] **Router** - Used React Router for `/`, `/dashboard`, `/leaderboard`, and `/about`.
+- [x] **Bundled using Vite** - Easy to install and use Vite.
+- [x] **Components** - I created separate React components for Login, Dashboard, Leaderboard, and About.
+- [x] **Router** - I used React Router to switch between the views without reloading the page.
 
 ## &#128640; React part 2: Reactivity deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **All functionality implemented or mocked out** - Used state and mocked activity to make the app feel interactive.
-- [x] **Hooks** - Used `useState` and `useEffect` for data loading and UI updates.
+- [x] **All functionality implemented or mocked out** - I used state for hydration data and mocked friend activity so the app feels interactive.
+- [x] **Hooks** - I used `useState` and `useEffect` to load data and update the UI.
 
 ## &#128640; Service deliverable
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Node.js/Express HTTP service** - I created an Express service in `service/index.js` and set the default port to `4000`.
-- [x] **Static middleware for frontend** - The service uses `express.static('public')` to host the built frontend.
-- [x] **Calls to third party endpoints** - The dashboard calls the Open-Meteo weather API from the frontend.
-- [x] **Backend service endpoints** - I added endpoints for auth, user hydration data, and the leaderboard.
-- [x] **Frontend calls service endpoints** - The React app uses `fetch` to call login, create account, logout, load user data, save user data, and load leaderboard data.
-- [x] **Supports registration, login, logout, and restricted endpoint** - The app supports account creation, login, logout, and protected routes that require a valid auth token.
-- [x] **Uses BCrypt to hash passwords** - Passwords are hashed with `bcryptjs` before they are stored.
+- [x] **Node.js/Express HTTP service** - Installed Express with NPM and built the service in `service/index.js`. Default port is `4000`.
+- [x] **Static middleware for frontend** - The service uses `express.static('public')`.
+- [x] **Calls to third party endpoints** - The dashboard calls the Open-Meteo API and shows the weather in React.
+- [x] **Backend service endpoints** - Added service endpoints in `service/index.js` for auth, hydration data, and leaderboard data.
+- [x] **Frontend calls service endpoints** - Removed the local mock flow for login/data and replaced it with `fetch` calls to the service.
+- [x] **Supports registration, login, logout, and restricted endpoint** - The app supports account creation, login, logout, and protected endpoints for hydration data and leaderboard data.
+- [x] **Uses BCrypt to hash passwords** - Passwords are hashed with `bcryptjs` before being stored.
 
 ## &#128640; DB deliverable
 

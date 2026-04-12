@@ -7,7 +7,6 @@ export default function Leaderboard({ onLogout }) {
   const [feed, setFeed] = useState([]);
 
   useEffect(() => {
-    // Fetch leaderboard from backend instead of localStorage
     fetch('/api/leaderboard')
       .then(async res => {
         if (res.status === 401) {
@@ -19,10 +18,9 @@ export default function Leaderboard({ onLogout }) {
       .then(data => setPlayers(data))
       .catch(() => setPlayers([]));
 
-    // Live activity feed (simulated — will be WebSocket later)
     function handleEvent(event) {
       if (event.type === DrinkEvent.Log) {
-        setFeed((prev) => {
+        setFeed(prev => {
           const msg = `${event.from} just logged ${event.value.oz} oz`;
           const next = [msg, ...prev];
           return next.length > 5 ? next.slice(0, 5) : next;
@@ -32,19 +30,19 @@ export default function Leaderboard({ onLogout }) {
 
     DrinkNotifier.addHandler(handleEvent);
     return () => DrinkNotifier.removeHandler(handleEvent);
-  }, []);
+  }, [onLogout]);
 
   const rows = players.length
-    ? players.map((p, i) => (
-        <tr key={p.name}>
-          <td>{i + 1}</td>
-          <td>{p.name}</td>
-          <td>{p.weeklyTotal} oz</td>
-          <td>{p.streak}</td>
+    ? players.map((player, index) => (
+        <tr key={player.name}>
+          <td>{index + 1}</td>
+          <td>{player.name}</td>
+          <td>{player.weeklyTotal} oz</td>
+          <td>{player.streak}</td>
           <td>
-            {p.treeSrc
-              ? <img src={p.treeSrc} alt={p.treeLabel} style={{ height: '40px' }} />
-              : p.treeLabel}
+            {player.treeSrc
+              ? <img src={player.treeSrc} alt={player.treeLabel} style={{ height: '40px' }} />
+              : player.treeLabel}
           </td>
         </tr>
       ))
@@ -78,12 +76,11 @@ export default function Leaderboard({ onLogout }) {
         <h5 style={{ color: '#1a237e' }}>&#9889; Live Activity</h5>
         {feed.length === 0
           ? <p className="text-muted">Waiting for activity...</p>
-          : feed.map((msg, i) => (
-              <div key={i} className="text-muted" style={{ fontSize: '0.9rem' }}>
+          : feed.map((msg, index) => (
+              <div key={index} className="text-muted" style={{ fontSize: '0.9rem' }}>
                 {msg}
               </div>
-            ))
-        }
+            ))}
       </div>
     </main>
   );
