@@ -56,6 +56,10 @@ apiRouter.delete('/auth/logout', async (req, res) => {
   res.status(204).end();
 });
 
+apiRouter.get('/auth/me', verifyAuth, async (req, res) => {
+  res.send({ name: req.user.name });
+});
+
 // ─── Auth middleware ──────────────────────────────────────────────────────────
 
 const verifyAuth = async (req, res, next) => {
@@ -146,7 +150,7 @@ async function findUser(field, value) {
 function setAuthCookie(res, authToken) {
   res.cookie(authCookieName, authToken, {
     maxAge: 1000 * 60 * 60 * 24 * 365,
-    secure: true,
+    secure: process.env.NODE_ENV === 'production',
     httpOnly: true,
     sameSite: 'strict',
   });
