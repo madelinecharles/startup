@@ -1,7 +1,7 @@
 {
   "name": "startup",
   "version": "1.0.0",
-  "description": "[My Notes](docs/notes.md)",
+  "description": "[My Notes](notes.md)",
   "main": "index.js",
   "directories": {
     "doc": "docs"
