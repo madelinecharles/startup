@@ -19,18 +19,27 @@ const apiRouter = express.Router();
 app.use('/api', apiRouter);
 
 apiRouter.post('/auth/create', async (req, res) => {
-  if (await findUser('name', req.body.name)) {
+  const credentials = getCredentials(req.body);
+  if (!credentials) {
+    res.status(400).send({ msg: 'Name and password are required' });
+  } else if (await findUser('name', credentials.name)) {
     res.status(409).send({ msg: 'Name already taken' });
   } else {
-    const user = await createUser(req.body.name, req.body.password);
+    const user = await createUser(credentials.name, credentials.password);
     setAuthCookie(res, user.token);
     res.send({ name: user.name });
   }
 });
 
 apiRouter.post('/auth/login', async (req, res) => {
-  const user = await findUser('name', req.body.name);
-  if (user && (await bcrypt.compare(req.body.password, user.password))) {
+  const credentials = getCredentials(req.body);
+  if (!credentials) {
+    res.status(400).send({ msg: 'Name and password are required' });
+    return;
+  }
+
+  const user = await findUser('name', credentials.name);
+  if (user && (await bcrypt.compare(credentials.password, user.password))) {
     user.token = uuid.v4();
     setAuthCookie(res, user.token);
     res.send({ name: user.name });
@@ -48,10 +57,6 @@ apiRouter.delete('/auth/logout', async (req, res) => {
   res.status(204).end();
 });
 
-apiRouter.get('/auth/me', verifyAuth, (req, res) => {
-  res.send({ name: req.user.name });
-});
-
 const verifyAuth = async (req, res, next) => {
   const user = await findUser('token', req.cookies[authCookieName]);
   if (user) {
@@ -61,6 +66,10 @@ const verifyAuth = async (req, res, next) => {
     res.status(401).send({ msg: 'Unauthorized' });
   }
 };
+
+apiRouter.get('/auth/me', verifyAuth, (req, res) => {
+  res.send({ name: req.user.name });
+});
 
 apiRouter.get('/user/data', verifyAuth, (req, res) => {
   const data = playerData[req.user.name] || defaultData();
@@ -105,6 +114,17 @@ function defaultData() {
     treeLabel: 'No tree yet',
     treeSrc: null,
   };
+}
+
+function getCredentials(body) {
+  const name = typeof body?.name === 'string' ? body.name.trim() : '';
+  const password = typeof body?.password === 'string' ? body.password : '';
+
+  if (!name || !password) {
+    return null;
+  }
+
+  return { name, password };
 }
 
 function getWeekStart() {

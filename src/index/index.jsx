@@ -15,7 +15,6 @@ function Unauthenticated({ onLogin }) {
     });
 
     if (response.ok) {
-      localStorage.setItem('userName', name);
       onLogin(name);
     } else {
       const body = await response.json();
@@ -85,9 +84,7 @@ function Authenticated({ userName, onLogout }) {
   const navigate = useNavigate();
 
   async function logout() {
-    await fetch('/api/auth/logout', { method: 'DELETE' });
-    localStorage.removeItem('userName');
-    onLogout();
+    await onLogout();
   }
 
   return (

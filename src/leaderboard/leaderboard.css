@@ -1,23 +1,8 @@
-/* Drinkly — leaderboard page */
-
 td {
   max-width: 40vw;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-}
-
-.rank-gold td:first-child   { color: #ffc107; font-weight: 800; }
-.rank-silver td:first-child { color: #adb5bd; font-weight: 800; }
-.rank-bronze td:first-child { color: #fd7e14; font-weight: 800; }
-
-.you-row {
-  background-color: rgba(25, 135, 84, 0.15) !important;
-}
-
-.you-row td {
-  font-weight: 700;
-  color: #198754;
 }
 
 table tbody tr:nth-child(even) {

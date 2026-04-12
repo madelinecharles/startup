@@ -73,18 +73,17 @@ export default function App() {
   }, []);
 
   function onLogin(name) {
-    const currentUser = localStorage.getItem('userName');
-    if (currentUser !== name) {
-      localStorage.removeItem('intake');
-      localStorage.removeItem('streak');
-    }
     localStorage.setItem('userName', name);
     setUserName(name);
   }
 
-  function onLogout() {
-    localStorage.removeItem('userName');
-    setUserName('');
+  async function onLogout() {
+    try {
+      await fetch('/api/auth/logout', { method: 'DELETE' });
+    } finally {
+      localStorage.removeItem('userName');
+      setUserName('');
+    }
   }
 
   return (
