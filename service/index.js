@@ -2,12 +2,10 @@ const cookieParser = require('cookie-parser');
 const bcrypt = require('bcryptjs');
 const express = require('express');
 const uuid = require('uuid');
+const DB = require('./database.js');
 
 const app = express();
 const authCookieName = 'token';
-
-let users = [];
-let playerData = {};
 
 const port = process.argv.length > 2 ? process.argv[2] : 4000;
 
@@ -51,7 +49,7 @@ apiRouter.post('/auth/login', async (req, res) => {
 apiRouter.delete('/auth/logout', async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
   if (user) {
-    delete user.token;
+    await DB.removeUserToken(user);
   }
   res.clearCookie(authCookieName);
   res.status(204).end();
@@ -71,28 +69,19 @@ apiRouter.get('/auth/me', verifyAuth, (req, res) => {
   res.send({ name: req.user.name });
 });
 
-apiRouter.get('/user/data', verifyAuth, (req, res) => {
-  const data = playerData[req.user.name] || defaultData();
+apiRouter.get('/user/data', verifyAuth, async (req, res) => {
+  const data = await DB.getPlayerData(req.user.name) || defaultData();
   res.send(data);
 });
 
-apiRouter.post('/user/data', verifyAuth, (req, res) => {
-  playerData[req.user.name] = req.body;
-  res.send(playerData[req.user.name]);
+apiRouter.post('/user/data', verifyAuth, async (req, res) => {
+  const data = await DB.savePlayerData(req.user.name, req.body);
+  res.send(data);
 });
 
-apiRouter.get('/leaderboard', verifyAuth, (_req, res) => {
-  const today = new Date().toLocaleDateString();
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toLocaleDateString();
-
-  const active = Object.entries(playerData)
-    .filter(([, data]) => data.lastDate === today || data.lastDate === yesterdayStr)
-    .map(([name, data]) => ({ name, ...data }))
-    .sort((a, b) => b.weeklyTotal - a.weeklyTotal);
-
-  res.send(active);
+apiRouter.get('/leaderboard', verifyAuth, async (_req, res) => {
+  const leaderboard = await DB.getLeaderboard();
+  res.send(leaderboard);
 });
 
 app.use(function (err, _req, res, _next) {
@@ -136,13 +125,14 @@ function getWeekStart() {
 async function createUser(name, password) {
   const passwordHash = await bcrypt.hash(password, 10);
   const user = { name, password: passwordHash, token: uuid.v4() };
-  users.push(user);
+  await DB.addUser(user);
   return user;
 }
 
 async function findUser(field, value) {
   if (!value) return null;
-  return users.find(user => user[field] === value);
+  if (field === 'token') return DB.getUserByToken(value);
+  return DB.getUser(value);
 }
 
 function setAuthCookie(res, authToken) {
