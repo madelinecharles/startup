@@ -17,6 +17,15 @@ For the service part I used Simon Service as the example for how to organize the
 
 One thing I learned is that secure cookies should only be forced in production. If they are always secure, login on `http://localhost` can fail.
 
+## DB Deliverable
+
+- Connected to MongoDB Atlas using `MongoClient` in `service/database.js`.
+- Used a `dbConfig.json` file (not committed to GitHub) to store credentials.
+- `user` collection stores name, hashed password, and auth token.
+- `playerData` collection stores streak, intake, weeklyTotal, tree, and dates.
+- All data endpoints are protected by `verifyAuth` middleware that checks the cookie token.
+- Learned that `upsert: true` in `updateOne` creates the document if it doesn't exist yet.
+
 ## Run Notes
 
 - Run `npm install` in the root folder.
