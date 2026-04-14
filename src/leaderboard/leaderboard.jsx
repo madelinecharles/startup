@@ -19,7 +19,13 @@ export default function Leaderboard({ onLogout }) {
       .catch(() => setPlayers([]));
 
     function handleEvent(event) {
-      if (event.type === DrinkEvent.Log) {
+      if (event.type === DrinkEvent.System) {
+        setFeed(prev => {
+          const msg = `WebSocket ${event.value.msg}`;
+          const next = [msg, ...prev];
+          return next.length > 5 ? next.slice(0, 5) : next;
+        });
+      } else if (event.type === DrinkEvent.Log && event.from !== 'system') {
         setFeed(prev => {
           const msg = `${event.from} just logged ${event.value.oz} oz`;
           const next = [msg, ...prev];
