@@ -87,6 +87,10 @@ Key things I learned:
 
 This time I focused on making the app actually work with state. I used useState for values like intake/streak and useEffect to read/write localStorage on load. For anything that needs a backend later, I mocked it so the UI still feels real.
 
+## DB Deliverable (quick notes)
+
+I switched the backend from in-memory arrays to MongoDB so data persists. I added a dbConfig.json file for credentials and a database.js module like Simon DB. Users and hydration data are now stored in the database, and auth uses a hashed password and token.
+
 <!--
 
 ## CSS (Simon example notes)

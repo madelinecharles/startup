@@ -5,9 +5,8 @@ const url = `mongodb+srv://${config.userName}:${config.password}@${config.hostna
 const client = new MongoClient(url);
 const db = client.db('drinkly');
 const userCollection = db.collection('user');
-const playerDataCollection = db.collection('playerData');
+const dataCollection = db.collection('player');
 
-// Asynchronously test the connection and exit if it fails
 (async function testConnection() {
   try {
     await db.command({ ping: 1 });
@@ -34,34 +33,22 @@ async function updateUser(user) {
   await userCollection.updateOne({ name: user.name }, { $set: user });
 }
 
-async function removeUserToken(user) {
+async function updateUserRemoveAuth(user) {
   await userCollection.updateOne({ name: user.name }, { $unset: { token: 1 } });
 }
 
-async function getPlayerData(name) {
-  const data = await playerDataCollection.findOne({ name: name });
-  return data || null;
+function getPlayerData(name) {
+  return dataCollection.findOne({ name: name });
 }
 
-async function savePlayerData(name, data) {
-  await playerDataCollection.updateOne(
-    { name: name },
-    { $set: { name, ...data } },
-    { upsert: true }
-  );
-  return playerDataCollection.findOne({ name: name });
+async function updatePlayerData(name, data) {
+  await dataCollection.updateOne({ name: name }, { $set: { name: name, ...data } }, { upsert: true });
 }
 
-async function getLeaderboard() {
-  const today = new Date().toLocaleDateString();
-  const yesterday = new Date();
-  yesterday.setDate(yesterday.getDate() - 1);
-  const yesterdayStr = yesterday.toLocaleDateString();
-
-  return playerDataCollection
-    .find({ lastDate: { $in: [today, yesterdayStr] } })
-    .sort({ weeklyTotal: -1 })
-    .toArray();
+function getLeaderboard(today, yesterday) {
+  const query = { lastDate: { $in: [today, yesterday] } };
+  const options = { sort: { weeklyTotal: -1 } };
+  return dataCollection.find(query, options).toArray();
 }
 
 module.exports = {
@@ -69,8 +56,8 @@ module.exports = {
   getUserByToken,
   addUser,
   updateUser,
-  removeUserToken,
+  updateUserRemoveAuth,
   getPlayerData,
-  savePlayerData,
+  updatePlayerData,
   getLeaderboard,
 };

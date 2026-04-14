@@ -120,8 +120,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [x] **Stores data in MongoDB** - Hydration data (streak, intake, weeklyTotal, tree) is saved and retrieved from the `playerData` collection in MongoDB.
-- [x] **Stores credentials in MongoDB** - User accounts with hashed passwords are stored in the `user` collection. Tokens are used for session auth.
+- [x] **Stores data in MongoDB** - I store the hydration data (streak, intake, weekly total, last date, tree info) in MongoDB for each user so it persists.
+- [x] **Stores credentials in MongoDB** - I store user accounts in MongoDB with a hashed password and auth token, and I use that to log in and protect endpoints.
 
 ## &#128640; WebSocket deliverable
 

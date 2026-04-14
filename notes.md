@@ -1,38 +1,15 @@
-# Drinkly Notes
+﻿## DB Deliverable
 
-[Full course notes](docs/notes.md)
-
-## Service Deliverable
-
-For the service part I used Simon Service as the example for how to organize the project.
-
-- I kept a separate `service` folder with its own `package.json`.
-- I used Node.js and Express in `service/index.js`.
-- I used `express.static('public')` so the backend can serve the frontend.
-- I added auth endpoints for create account, login, logout, and checking the current user.
-- I added protected endpoints for hydration data and the leaderboard.
-- I used `bcryptjs` to hash passwords.
-- I used the Vite proxy so `/api` requests go to port `4000`.
-- I used a third-party API from the frontend by calling Open-Meteo on the dashboard.
-
-One thing I learned is that secure cookies should only be forced in production. If they are always secure, login on `http://localhost` can fail.
-
-## DB Deliverable
-
-- Connected to MongoDB Atlas using `MongoClient` in `service/database.js`.
-- Used a `dbConfig.json` file (not committed to GitHub) to store credentials.
-- `user` collection stores name, hashed password, and auth token.
-- `playerData` collection stores streak, intake, weeklyTotal, tree, and dates.
-- All data endpoints are protected by `verifyAuth` middleware that checks the cookie token.
-- Learned that `upsert: true` in `updateOne` creates the document if it doesn't exist yet.
-
+- I added a database.js module like Simon DB and connected to MongoDB with a dbConfig.json file.
+- I store users (name, hashed password, token) in MongoDB.
+- I store hydration data (streak, intake, weekly total, tree info) in MongoDB per user.
 ## WebSocket Deliverable
 
 I studied the Simon WebSocket repository to understand how peer-to-peer communication works before implementing it in Drinkly.
 
 ### What peerProxy.js does (backend)
 
-- Simon creates a `WebSocketServer` by passing the existing Express HTTP server directly: `new WebSocketServer({ server: httpServer })`. This means it does not open its own port — it piggybacks on the same port as the REST API.
+- Simon creates a `WebSocketServer` by passing the existing Express HTTP server directly: `new WebSocketServer({ server: httpServer })`. This means it does not open its own port â€” it piggybacks on the same port as the REST API.
 - When a browser connects, the HTTP connection is automatically upgraded to a WebSocket connection by the `ws` package.
 - The server keeps track of all connected clients using `socketServer.clients` (a built-in Set from the `ws` package).
 - When any client sends a message, the server loops through all clients and forwards that message to everyone **except** the sender:
@@ -47,7 +24,7 @@ I studied the Simon WebSocket repository to understand how peer-to-peer communic
 
 ### What gameNotifier.js does (frontend)
 
-- The browser uses the built-in `WebSocket` API — no npm package needed on the frontend.
+- The browser uses the built-in `WebSocket` API â€” no npm package needed on the frontend.
 - It checks the current page protocol to decide whether to use `ws://` (for http) or `wss://` (for https). This is important so it works both in development and in production.
 - It connects to `/ws` on the same host the page was loaded from: `new WebSocket(\`${protocol}://${window.location.hostname}:${port}/ws\`)`.
 - It uses an **observer pattern**: React components call `addHandler(fn)` to register a callback. When a WebSocket message arrives, `receiveEvent` notifies all registered handlers. This keeps WebSocket logic separated from the UI components.
@@ -65,20 +42,20 @@ I studied the Simon WebSocket repository to understand how peer-to-peer communic
     ws: true,
   }
   ```
-- The `ws: true` flag is required — without it Vite treats it as a regular HTTP proxy and the upgrade fails.
+- The `ws: true` flag is required â€” without it Vite treats it as a regular HTTP proxy and the upgrade fails.
 - This proxy is **only used during development**. It is completely ignored when the app is built and deployed to production.
 
 ### How the ws npm package works
 
 - `ws` is a Node.js package that implements the WebSocket protocol.
 - You install it with `npm install ws` in the service folder.
-- It handles the HTTP → WebSocket protocol upgrade automatically when you pass your HTTP server into it.
-- The browser does not need the `ws` package — browsers have WebSocket built in natively.
+- It handles the HTTP â†’ WebSocket protocol upgrade automatically when you pass your HTTP server into it.
+- The browser does not need the `ws` package â€” browsers have WebSocket built in natively.
 
 ### Key things I learned
 
 - WebSocket starts as a normal HTTP request with an `Upgrade: websocket` header. The server accepts the upgrade and from that point the connection is bidirectional.
-- The server acts as a **proxy/middleman** — clients never talk directly to each other. All messages go through the server which forwards them.
+- The server acts as a **proxy/middleman** â€” clients never talk directly to each other. All messages go through the server which forwards them.
 - `ws://` is for non-secure connections (http), `wss://` is for secure connections (https). Using the wrong one in production will cause the connection to fail silently.
 - Ping/pong is necessary in production because load balancers and firewalls will close idle connections without it.
 - The observer pattern in `gameNotifier.js` / `drinkNotifier.js` is what lets multiple React components all react to the same WebSocket events without tightly coupling them together.
@@ -87,9 +64,9 @@ I studied the Simon WebSocket repository to understand how peer-to-peer communic
 
 ### What I built for Drinkly
 
-- Created `service/peerProxy.js` — a WebSocket server that attaches to the existing Express HTTP server. It forwards drink log events from one connected user to all other connected users in real time.
-- Modified `service/index.js` — saved the result of `app.listen()` to a variable called `server` and passed it to `DrinkProxy(server)` so the WebSocket server shares the same port as the REST API.
-- Installed the `ws` npm package in the `service` folder — this is what powers the WebSocket server on the backend.
+- Created `service/peerProxy.js` â€” a WebSocket server that attaches to the existing Express HTTP server. It forwards drink log events from one connected user to all other connected users in real time.
+- Modified `service/index.js` â€” saved the result of `app.listen()` to a variable called `server` and passed it to `DrinkProxy(server)` so the WebSocket server shares the same port as the REST API.
+- Installed the `ws` npm package in the `service` folder â€” this is what powers the WebSocket server on the backend.
 - Replaced the fake `setInterval` mock in `src/leaderboard/drinkNotifier.js` with a real WebSocket connection using the browser's built-in `WebSocket` API. It uses `ws://` for http and `wss://` for https automatically.
 - Added a `sendEvent()` method to `DrinkEventNotifier` so the dashboard can broadcast events to the server.
 - Updated `src/dashboard/dashboard.jsx` to call `DrinkNotifier.sendEvent()` every time the user clicks `+ Log Water Intake`. This sends a real-time event to all connected users.
@@ -98,10 +75,10 @@ I studied the Simon WebSocket repository to understand how peer-to-peer communic
 
 ### How it works end to end
 
-1. User opens the app — `drinkNotifier.js` creates a WebSocket connection to `/ws`
+1. User opens the app â€” `drinkNotifier.js` creates a WebSocket connection to `/ws`
 2. Vite (dev) or the Express server (production) handles the connection
 3. `peerProxy.js` registers the connection and stores it
-4. User clicks Log Water on the dashboard — `sendEvent()` sends a JSON message over WebSocket
+4. User clicks Log Water on the dashboard â€” `sendEvent()` sends a JSON message over WebSocket
 5. `peerProxy.js` receives the message and forwards it to all other connected clients
 6. Other users' `drinkNotifier.js` receives the message via `onmessage` and notifies handlers
 7. `leaderboard.jsx` handler fires and updates the Live Activity feed instantly
@@ -119,3 +96,4 @@ I studied the Simon WebSocket repository to understand how peer-to-peer communic
 - Run `npm install` in the `service` folder.
 - Run `npm run dev` for the frontend.
 - Run `node index.js` inside `service` for the backend.
+

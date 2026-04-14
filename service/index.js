@@ -40,6 +40,7 @@ apiRouter.post('/auth/login', async (req, res) => {
   const user = await findUser('name', credentials.name);
   if (user && (await bcrypt.compare(credentials.password, user.password))) {
     user.token = uuid.v4();
+    await DB.updateUser(user);
     setAuthCookie(res, user.token);
     res.send({ name: user.name });
   } else {
@@ -50,7 +51,7 @@ apiRouter.post('/auth/login', async (req, res) => {
 apiRouter.delete('/auth/logout', async (req, res) => {
   const user = await findUser('token', req.cookies[authCookieName]);
   if (user) {
-    await DB.removeUserToken(user);
+    await DB.updateUserRemoveAuth(user);
   }
   res.clearCookie(authCookieName);
   res.status(204).end();
@@ -71,18 +72,24 @@ apiRouter.get('/auth/me', verifyAuth, (req, res) => {
 });
 
 apiRouter.get('/user/data', verifyAuth, async (req, res) => {
-  const data = await DB.getPlayerData(req.user.name) || defaultData();
-  res.send(data);
+  const data = await DB.getPlayerData(req.user.name);
+  res.send(data || defaultData());
 });
 
 apiRouter.post('/user/data', verifyAuth, async (req, res) => {
-  const data = await DB.savePlayerData(req.user.name, req.body);
-  res.send(data);
+  const payload = { ...req.body };
+  await DB.updatePlayerData(req.user.name, payload);
+  res.send({ ...payload, name: req.user.name });
 });
 
 apiRouter.get('/leaderboard', verifyAuth, async (_req, res) => {
-  const leaderboard = await DB.getLeaderboard();
-  res.send(leaderboard);
+  const today = new Date().toLocaleDateString();
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate() - 1);
+  const yesterdayStr = yesterday.toLocaleDateString();
+
+  const active = await DB.getLeaderboard(today, yesterdayStr);
+  res.send(active);
 });
 
 app.use(function (err, _req, res, _next) {
@@ -132,7 +139,9 @@ async function createUser(name, password) {
 
 async function findUser(field, value) {
   if (!value) return null;
-  if (field === 'token') return DB.getUserByToken(value);
+  if (field === 'token') {
+    return DB.getUserByToken(value);
+  }
   return DB.getUser(value);
 }
 
@@ -148,4 +157,5 @@ function setAuthCookie(res, authToken) {
 const server = app.listen(port, () => {
   console.log(`Drinkly service listening on port ${port}`);
 });
+
 DrinkProxy(server);
