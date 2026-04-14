@@ -91,6 +91,10 @@ This time I focused on making the app actually work with state. I used useState 
 
 I switched the backend from in-memory arrays to MongoDB so data persists. I added a dbConfig.json file for credentials and a database.js module like Simon DB. Users and hydration data are now stored in the database, and auth uses a hashed password and token.
 
+## WebSocket Deliverable (quick notes)
+
+I used the Simon WebSocket example to understand the peerProxy pattern. The backend attaches a WebSocket server to the existing HTTP server, and the frontend connects to /ws and listens for live events. I also added a /ws proxy in Vite for local testing.
+
 <!--
 
 ## CSS (Simon example notes)
@@ -180,6 +184,7 @@ Key things I learned:
 - `useEffect` with `[]` runs once on mount  perfect for loading localStorage data
 - State updates are asynchronous so you need to compute new values before calling both `setState` and `localStorage.setItem`
 - `useEffect` cleanup functions (returning a function) are important for removing event handlers when a component unmounts
+
 
 
 
