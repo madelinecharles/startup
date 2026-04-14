@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { DrinkEvent, DrinkNotifier } from '../leaderboard/drinkNotifier';
 import './dashboard.css';
 
 const GOAL_OZ = 100;
@@ -108,6 +109,7 @@ export default function Dashboard({ userName, onLogout }) {
     setIntake(newIntake);
     setWeeklyTotal(newWeekly);
     saveToBackend(newIntake, newWeekly, streak);
+    DrinkNotifier.sendEvent(userName, DrinkEvent.Log, { oz: 8 });
   }
 
   function newDay() {
