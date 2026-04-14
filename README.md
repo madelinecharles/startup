@@ -56,7 +56,7 @@ I am going to use the required technologies in the following ways.
 - **React** - Single page application with routing between views, reactive user controls, and state hooks.
 - **Service** - Endpoints for authentication, saving hydration data, loading hydration data, and getting leaderboard data. Third party call for weather.
 - **DB/Login** - Stores users and hydration data. Passwords are hashed and protected endpoints require authentication.
-- **WebSocket** - Friend activity is mocked right now and will later be replaced by live updates.
+- **WebSocket** - When a user logs water on the dashboard, a real-time event is sent over WebSocket to the server, which forwards it to all other connected users. The leaderboard Live Activity feed displays these events instantly.
 
 ## &#128640; AWS deliverable
 
@@ -127,8 +127,8 @@ For this deliverable I did the following. I checked the box `[x]` and added a de
 
 For this deliverable I did the following. I checked the box `[x]` and added a description for things I completed.
 
-- [ ] **Backend listens for WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Frontend makes WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **Data sent over WebSocket connection** - I did not complete this part of the deliverable.
-- [ ] **WebSocket data displayed** - I did not complete this part of the deliverable.
-- [ ] **Application is fully functional** - I did not complete this part of the deliverable.
+- [x] **Backend listens for WebSocket connection** - Created `service/peerProxy.js` with a `DrinkProxy` function that attaches a `WebSocketServer` to the existing Express HTTP server. It listens for connections, forwards messages to all other connected clients, and uses ping/pong to keep connections alive.
+- [x] **Frontend makes WebSocket connection** - Updated `src/leaderboard/drinkNotifier.js` to create a real WebSocket connection using the browser's built-in `WebSocket` API. It automatically uses `ws://` for http and `wss://` for https.
+- [x] **Data sent over WebSocket connection** - When a user clicks `+ Log Water Intake` on the dashboard, `DrinkNotifier.sendEvent()` sends a JSON message over the WebSocket connection to the server, which forwards it to all other connected users.
+- [x] **WebSocket data displayed** - The leaderboard's Live Activity feed displays real-time events from other users (e.g. `Maddy just logged 8 oz`) and connection status messages (e.g. `WebSocket connected`).
+- [x] **Application is fully functional** - Tested with two browser windows logged in as different users. Logging water in one window instantly updates the Live Activity feed in the other window. No mocks or placeholder features remain.

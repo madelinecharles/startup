@@ -83,6 +83,36 @@ I studied the Simon WebSocket repository to understand how peer-to-peer communic
 - Ping/pong is necessary in production because load balancers and firewalls will close idle connections without it.
 - The observer pattern in `gameNotifier.js` / `drinkNotifier.js` is what lets multiple React components all react to the same WebSocket events without tightly coupling them together.
 
+## WebSocket Implementation
+
+### What I built for Drinkly
+
+- Created `service/peerProxy.js` — a WebSocket server that attaches to the existing Express HTTP server. It forwards drink log events from one connected user to all other connected users in real time.
+- Modified `service/index.js` — saved the result of `app.listen()` to a variable called `server` and passed it to `DrinkProxy(server)` so the WebSocket server shares the same port as the REST API.
+- Installed the `ws` npm package in the `service` folder — this is what powers the WebSocket server on the backend.
+- Replaced the fake `setInterval` mock in `src/leaderboard/drinkNotifier.js` with a real WebSocket connection using the browser's built-in `WebSocket` API. It uses `ws://` for http and `wss://` for https automatically.
+- Added a `sendEvent()` method to `DrinkEventNotifier` so the dashboard can broadcast events to the server.
+- Updated `src/dashboard/dashboard.jsx` to call `DrinkNotifier.sendEvent()` every time the user clicks `+ Log Water Intake`. This sends a real-time event to all connected users.
+- Updated `src/leaderboard/leaderboard.jsx` to handle both system events (WebSocket connected/disconnected) and drink log events from real users in the Live Activity feed.
+- Updated `vite.config.js` to proxy `/ws` requests to `ws://localhost:4000` during development. Without this the WebSocket connection fails when running Vite locally.
+
+### How it works end to end
+
+1. User opens the app — `drinkNotifier.js` creates a WebSocket connection to `/ws`
+2. Vite (dev) or the Express server (production) handles the connection
+3. `peerProxy.js` registers the connection and stores it
+4. User clicks Log Water on the dashboard — `sendEvent()` sends a JSON message over WebSocket
+5. `peerProxy.js` receives the message and forwards it to all other connected clients
+6. Other users' `drinkNotifier.js` receives the message via `onmessage` and notifies handlers
+7. `leaderboard.jsx` handler fires and updates the Live Activity feed instantly
+
+### What I verified
+
+- Opened two browser windows logged in as different users
+- Logged water in one window and confirmed the Live Activity feed updated in the other window in real time
+- Confirmed `WebSocket connected` appears in the feed when the leaderboard loads
+- Checked the Network tab in DevTools and confirmed the `/ws` WebSocket connection is active
+
 ## Run Notes
 
 - Run `npm install` in the root folder.
