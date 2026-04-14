@@ -1,24 +1,43 @@
 const DrinkEvent = {
   Log: 'waterLog',
   NewDay: 'newDay',
+  System: 'system',
 };
 
 class DrinkEventNotifier {
   handlers = [];
+  socket = null;
 
   constructor() {
-    // This will be replaced with WebSocket messages from the server
-    const mockUsers = ['Alex', 'Jordan', 'Sam', 'Taylor', 'Casey'];
-    setInterval(() => {
-      const user = mockUsers[Math.floor(Math.random() * mockUsers.length)];
-      const oz = (Math.floor(Math.random() * 5) + 1) * 8;
-      this.broadcastEvent(user, DrinkEvent.Log, { oz });
-    }, 5000);
+    const protocol = window.location.protocol === 'http:' ? 'ws' : 'wss';
+    this.socket = new WebSocket(`${protocol}://${window.location.host}/ws`);
+
+    this.socket.onopen = () => {
+      this.broadcastEvent('system', DrinkEvent.System, { msg: 'connected' });
+    };
+
+    this.socket.onclose = () => {
+      this.broadcastEvent('system', DrinkEvent.System, { msg: 'disconnected' });
+    };
+
+    this.socket.onmessage = async (msg) => {
+      try {
+        const text = await msg.data.text();
+        const event = JSON.parse(text);
+        this.broadcastEvent(event.from, event.type, event.value);
+      } catch {}
+    };
   }
 
   broadcastEvent(from, type, value) {
     const event = { from, type, value };
     this.handlers.forEach((handler) => handler(event));
+  }
+
+  sendEvent(from, type, value) {
+    if (this.socket?.readyState === WebSocket.OPEN) {
+      this.socket.send(JSON.stringify({ from, type, value }));
+    }
   }
 
   addHandler(handler) {
